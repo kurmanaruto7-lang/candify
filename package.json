@@ -1,0 +1,1 @@
+{"name":"candify","version":"1.0.0","main":"server.js","scripts":{"start":"node server.js"},"engines":{"node":">=18"},"dependencies":{"@mercuryworkshop/bare-mux":"^2.1.9","@mercuryworkshop/epoxy-transport":"^3.0.1","@titaniumnetwork-dev/ultraviolet":"^3.2.10","wisp-server-node":"^1.1.8"}}

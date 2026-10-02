@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Candify</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#2a0f45;--pink:#ff4fa3;--mint:#5ff2c4;--lemon:#ffe45c;--cream:#fff3e6}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--cream);font-family:Fredoka,system-ui,sans-serif;display:grid;place-items:center;overflow:hidden}
+main{display:grid;justify-items:center;gap:28px;padding:24px;text-align:center}
+.pop{width:min(46vw,240px);aspect-ratio:1;border-radius:50%;background:repeating-conic-gradient(from 0deg,var(--pink) 0 20deg,var(--cream) 20deg 40deg);box-shadow:0 0 0 10px var(--lemon),0 24px 60px #0008;animation:spin 14s linear infinite;position:relative}
+.pop::after{content:"";position:absolute;left:50%;top:100%;width:14px;height:34vh;background:var(--cream);transform:translateX(-50%);border-radius:0 0 8px 8px;z-index:-1}
+@keyframes spin{to{transform:rotate(360deg)}}
+h1{font-size:clamp(56px,12vw,120px);font-weight:700;letter-spacing:-.02em;line-height:1;color:var(--lemon);text-shadow:5px 5px 0 var(--pink)}
+p{font-size:18px;opacity:.85}
+button{font:inherit;font-weight:700;font-size:22px;padding:16px 44px;border:0;border-radius:999px;background:var(--mint);color:var(--bg);cursor:pointer;box-shadow:0 6px 0 #1fa985;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(5px);box-shadow:0 1px 0 #1fa985}
+button:focus-visible{outline:4px solid var(--lemon);outline-offset:4px}
+small{display:block;font-size:14px;opacity:.6;min-height:1.2em}
+@media(prefers-reduced-motion:reduce){.pop{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<div class="pop"></div>
+<h1>Candify</h1>
+<p>The proxy browser, opened in an about:blank tab.</p>
+<button id="go">Launch</button>
+<small id="msg"></small>
+</main>
+<script>
+const URL_=location.origin+"/app"
+const msg=document.getElementById("msg")
+document.getElementById("go").onclick=()=>{
+const w=window.open("about:blank","_blank")
+if(!w){
+msg.textContent="Popup blocked. Allow popups for this site and click again."
+return
+}
+w.document.title="about:blank"
+w.document.body.style.margin="0"
+w.document.body.style.height="100vh"
+const f=w.document.createElement("iframe")
+f.src=URL_
+f.style.cssText="position:fixed;inset:0;width:100%;height:100%;border:0"
+f.allow="fullscreen;autoplay;gamepad;clipboard-write"
+w.document.body.appendChild(f)
+msg.textContent="Launched."
+}
+</script>
+</body>
+</html>

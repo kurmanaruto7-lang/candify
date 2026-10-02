@@ -1,0 +1,10 @@
+importScripts("/baremux/index.js")
+importScripts("/uv/uv.bundle.js")
+importScripts("/uv.config.js")
+importScripts(__uv$config.sw)
+const uv=new UVServiceWorker()
+self.addEventListener("install",()=>self.skipWaiting())
+self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()))
+self.addEventListener("fetch",e=>{
+e.respondWith(uv.route(e)?uv.fetch(e):fetch(e.request))
+})

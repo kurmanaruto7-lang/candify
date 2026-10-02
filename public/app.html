@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Candify</title>
+<link id="fav" rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="/config.js"></script>
+<script src="/uv/uv.bundle.js"></script>
+<script src="/uv.config.js"></script>
+<style>
+:root{--bg:#2a0f45;--panel:#3a1860;--panel2:#4b2278;--acc:#ff4fa3;--acc2:#5ff2c4;--acc3:#ffe45c;--fg:#fff3e6;--mut:#fff3e699}
+[data-theme=mint]{--bg:#0c2b28;--panel:#134540;--panel2:#1b5c55;--acc:#5ff2c4;--acc2:#ffe45c;--acc3:#ff4fa3}
+[data-theme=blueberry]{--bg:#0f1a3d;--panel:#192a63;--panel2:#233b86;--acc:#6c8cff;--acc2:#5ff2c4;--acc3:#ffe45c}
+[data-theme=lemon]{--bg:#2d2a08;--panel:#4a4510;--panel2:#625c18;--acc:#ffe45c;--acc2:#ff4fa3;--acc3:#5ff2c4}
+[data-theme=night]{--bg:#0d0d10;--panel:#18181d;--panel2:#25252d;--acc:#b78cff;--acc2:#5ff2c4;--acc3:#ffe45c}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--fg);font:500 14px Fredoka,system-ui,sans-serif;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+#tabs{display:flex;gap:4px;padding:6px 8px 0;background:var(--panel);align-items:flex-end;overflow-x:auto;flex:none}
+.tab{display:flex;align-items:center;gap:6px;max-width:200px;min-width:90px;padding:7px 8px 7px 12px;border-radius:12px 12px 0 0;background:var(--bg);opacity:.6;flex:0 1 200px;cursor:pointer}
+.tab.on{opacity:1;background:var(--panel2)}
+.tab span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tab img{width:14px;height:14px}
+.tab b{width:18px;height:18px;border-radius:50%;line-height:18px;text-align:center;font-size:13px}
+.tab b:hover{background:#fff3}
+#newtab{padding:6px 12px;font-size:18px;color:var(--acc2)}
+#bar{display:flex;gap:6px;align-items:center;padding:7px 8px;background:var(--panel2);flex:none}
+.ib{width:34px;height:34px;border-radius:50%;font-size:16px;flex:none}
+.ib:hover{background:#fff2}
+#omni{flex:1;height:36px;border-radius:999px;border:2px solid transparent;background:var(--bg);padding:0 16px;outline:0;min-width:0}
+#omni:focus{border-color:var(--acc)}
+#bm{display:flex;gap:6px;padding:4px 10px;background:var(--panel);overflow-x:auto;flex:none;min-height:30px}
+#bm button{padding:3px 12px;border-radius:999px;background:var(--bg);white-space:nowrap;font-size:13px}
+#bm button:hover{background:var(--acc);color:var(--bg)}
+#main{flex:1;position:relative;min-height:0}
+iframe.view{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;display:none}
+iframe.view.on{display:block}
+#home{position:absolute;inset:0;overflow:auto;display:none;flex-direction:column;align-items:center;padding:6vh 20px 40px;gap:22px}
+#home.on{display:flex}
+#home h1{font-size:clamp(48px,10vw,96px);color:var(--acc3);text-shadow:4px 4px 0 var(--acc);line-height:1}
+#home form{width:min(640px,100%)}
+#home input{width:100%;height:54px;border-radius:999px;border:3px solid var(--acc);background:var(--panel);padding:0 26px;font-size:18px;outline:0}
+#clock{opacity:.7;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;width:min(820px,100%)}
+.tile{display:grid;justify-items:center;gap:6px;padding:14px 6px;border-radius:18px;background:var(--panel);transition:.12s}
+.tile:hover{background:var(--panel2);transform:translateY(-3px)}
+.tile i{font-style:normal;font-size:30px}
+.tile small{font-size:12px;opacity:.85;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+h3{align-self:flex-start;margin:0 auto 0;width:min(820px,100%);color:var(--acc2);font-size:15px}
+#drawer{position:absolute;top:0;right:0;bottom:0;width:min(380px,100%);background:var(--panel);box-shadow:-8px 0 30px #0006;transform:translateX(105%);transition:transform .18s;z-index:5;display:flex;flex-direction:column}
+#drawer.on{transform:none}
+#dh{display:flex;gap:4px;padding:10px;background:var(--panel2)}
+#dh button{flex:1;padding:8px;border-radius:10px}
+#dh button.on{background:var(--acc);color:var(--bg);font-weight:700}
+#dh .x{flex:none;width:36px}
+#dc{flex:1;overflow:auto;padding:14px;display:grid;gap:12px;align-content:start}
+#dc label{display:grid;gap:5px;font-size:13px;color:var(--mut)}
+#dc input[type=text],#dc input:not([type]),#dc select{height:36px;border-radius:10px;border:0;background:var(--bg);padding:0 10px;outline:0;width:100%}
+#dc h4{color:var(--acc3);margin-top:6px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{padding:8px 14px;border-radius:10px;background:var(--acc);color:var(--bg);font-weight:700}
+.btn.alt{background:var(--bg);color:var(--fg)}
+.item{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--bg);cursor:pointer}
+.item span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.item small{opacity:.55}
+.sw{width:28px;height:28px;border-radius:50%;border:3px solid transparent}
+.sw.on{border-color:#fff}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--acc2);color:var(--bg);padding:8px 18px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:9}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="tabs"></div>
+<div id="bar">
+<button class="ib" id="back" title="Back (Alt+←)">←</button>
+<button class="ib" id="fwd" title="Forward">→</button>
+<button class="ib" id="reload" title="Reload (Alt+R)">⟳</button>
+<button class="ib" id="homeb" title="Home">🏠</button>
+<input id="omni" placeholder="Search or enter a URL" autocomplete="off" spellcheck="false">
+<button class="ib" id="star" title="Bookmark (Alt+D)">☆</button>
+<button class="ib" id="dev" title="DevTools (Eruda)">🛠</button>
+<button class="ib" id="blank" title="Open in about:blank">🕶</button>
+<button class="ib" id="full" title="Fullscreen">⛶</button>
+<button class="ib" id="menu" title="Menu">🍭</button>
+</div>
+<div id="bm"></div>
+<div id="main">
+<div id="home" class="on"></div>
+<div id="drawer"><div id="dh"></div><div id="dc"></div></div>
+</div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s)
+const store={
+get(k,d){try{const v=localStorage.getItem("cdf."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+set(k,v){try{localStorage.setItem("cdf."+k,JSON.stringify(v))}catch(e){}}
+}
+const defaults={theme:"candy",engine:"https://duckduckgo.com/?q=%s",cloak:"none",ctitle:"",cicon:"",panicKey:"`",panicUrl:"https://classroom.google.com",warn:false,openBlank:false}
+let S=Object.assign({},defaults,store.get("settings",{}))
+let bookmarks=store.get("bm",[
+{n:"YouTube",u:"https://www.youtube.com",i:"▶️"},{n:"Google",u:"https://www.google.com",i:"🔎"},
+{n:"Wikipedia",u:"https://www.wikipedia.org",i:"📚"},{n:"Reddit",u:"https://www.reddit.com",i:"👽"},
+{n:"DuckDuckGo",u:"https://duckduckgo.com",i:"🦆"},{n:"Fern",u:location.origin+"/s3/gfdd/index.html",i:"🌿"}])
+let history=store.get("hist",[])
+const cloaks={
+none:["Candify","data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>"],
+classroom:["Classes","https://ssl.gstatic.com/classroom/favicon.png"],
+docs:["Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],
+drive:["My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png"],
+canvas:["Dashboard","https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico"],
+clever:["Clever | Portal","https://assets.clever.com/launchpad/favicon.ico"]
+}
+const themes={candy:"#ff4fa3",mint:"#5ff2c4",blueberry:"#6c8cff",lemon:"#ffe45c",night:"#b78cff"}
+const quick=[["🎮","Games",""],["📺","YouTube","https://www.youtube.com"],["🎵","Spotify","https://open.spotify.com"],["💬","Discord","https://discord.com/app"],["🤖","ChatGPT","https://chatgpt.com"],["🎬","Twitch","https://www.twitch.tv"],["📰","Hacker News","https://news.ycombinator.com"],["🗺️","Maps","https://www.openstreetmap.org"]].filter(q=>q[2])
+
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1800)}
+const C=self.__uv$config
+const wispUrl=()=>window.CANDIFY_WISP||((location.protocol==="https:"?"wss://":"ws://")+location.host+"/wisp/")
+const ready=(async()=>{
+await navigator.serviceWorker.register("/sw.js",{scope:C.prefix})
+await navigator.serviceWorker.ready
+const {BareMuxConnection}=await import("/baremux/index.mjs")
+const c=new BareMuxConnection("/baremux/worker.js")
+await c.setTransport("/epoxy/index.mjs",[{wisp:wispUrl()}])
+})().catch(e=>{toast("Proxy engine failed: "+e.message);console.error(e)})
+function toUrl(v){
+v=v.trim()
+if(!v)return""
+if(/^[a-z][a-z0-9+.-]*:\/\//i.test(v))return v
+if(/^[^\s/]+\.[a-z]{2,}(:\d+)?([/?#].*)?$/i.test(v))return"https://"+v
+return S.engine.replace("%s",encodeURIComponent(v))
+}
+function realUrl(src){
+const i=(src||"").indexOf(C.prefix)
+if(i<0)return src||""
+try{return C.decodeUrl(src.slice(i+C.prefix.length))}catch(e){return""}
+}
+
+// ---------- tabs ----------
+let tabs=[],cur=null,nid=1
+function newTab(url){
+const t={id:nid++,title:"New Tab",url:"",frame:null}
+tabs.push(t)
+if(url)load(t,url)
+select(t)
+return t
+}
+function load(t,url){
+url=toUrl(url)
+if(!url){t.url="";t.title="New Tab";if(t.frame){t.frame.remove();t.frame=null}render();return}
+t.url=url;t.title=url.replace(/^https?:\/\//,"").slice(0,40)
+if(!t.frame){
+const f=document.createElement("iframe")
+f.className="view";f.allow="fullscreen;autoplay;gamepad;clipboard-write;microphone;camera"
+f.addEventListener("load",()=>onLoad(t))
+$("#main").prepend(f);t.frame=f
+}
+const f2=t.frame;ready.then(()=>{f2.src=url.startsWith(location.origin)||url.startsWith("/")?url:C.prefix+C.encodeUrl(url)})
+render()
+}
+function onLoad(t){
+try{
+const w=t.frame.contentWindow,u=realUrl(w.location.pathname)
+if(!u)return
+t.url=u
+const ti=w.document.title
+t.title=ti||u.replace(/^https?:\/\//,"").slice(0,40)
+try{t.icon="https://www.google.com/s2/favicons?sz=32&domain="+new URL(u).hostname}catch(e){}
+if(!u.startsWith(location.origin)){history=history.filter(h=>h.u!==u);history.unshift({u,t:t.title,d:Date.now()});history=history.slice(0,200);store.set("hist",history)}
+}catch(e){}
+render()
+}
+function select(t){cur=t;render()}
+function close(t){
+const i=tabs.indexOf(t)
+if(t.frame)t.frame.remove()
+tabs.splice(i,1)
+if(!tabs.length)return newTab()
+if(cur===t)cur=tabs[Math.max(0,i-1)]
+render()
+}
+function render(){
+$("#tabs").innerHTML=""
+for(const t of tabs){
+const d=document.createElement("div");d.className="tab"+(t===cur?" on":"")
+d.innerHTML=(t.icon&&t.frame?`<img src="${t.icon}">`:"<i style='font-style:normal'>🍬</i>")+"<span></span><b>×</b>"
+d.querySelector("span").textContent=t.title
+d.onclick=()=>select(t)
+d.querySelector("b").onclick=e=>{e.stopPropagation();close(t)}
+d.onauxclick=e=>{if(e.button===1)close(t)}
+$("#tabs").appendChild(d)
+}
+const n=document.createElement("button");n.id="newtab";n.textContent="+";n.onclick=()=>newTab();$("#tabs").appendChild(n)
+for(const t of tabs)if(t.frame)t.frame.classList.toggle("on",t===cur)
+$("#home").classList.toggle("on",!cur.frame)
+if(!cur.frame)renderHome()
+if(document.activeElement!==$("#omni"))$("#omni").value=cur.url&&!cur.url.startsWith(location.origin)?cur.url:""
+$("#star").textContent=bookmarks.some(b=>b.u===cur.url)?"★":"☆"
+}
+
+// ---------- home & bookmarks ----------
+function renderHome(){
+const h=$("#home")
+h.innerHTML=`<h1>Candify</h1><div id="clock"></div><form id="hf"><input placeholder="Search the web or type a URL" autofocus></form>
+<h3>Bookmarks</h3><div class="grid" id="bg"></div><h3>Quick links</h3><div class="grid" id="qg"></div>`
+$("#hf").onsubmit=e=>{e.preventDefault();navigate($("#hf input").value)}
+const tile=(i,n,u,del)=>{const b=document.createElement("button");b.className="tile";b.innerHTML=`<i>${i}</i><small></small>`;b.querySelector("small").textContent=n;b.onclick=()=>navigate(u);if(del)b.oncontextmenu=e=>{e.preventDefault();bookmarks=bookmarks.filter(x=>x.u!==u);store.set("bm",bookmarks);renderBm();render();toast("Bookmark removed")};return b}
+for(const b of bookmarks)$("#bg").appendChild(tile(b.i||"⭐",b.n,b.u,true))
+for(const q of quick)$("#qg").appendChild(tile(q[0],q[1],q[2]))
+const c=()=>{const e=$("#clock");if(e)e.textContent=new Date().toLocaleString([], {weekday:"long",hour:"numeric",minute:"2-digit"})}
+c()
+}
+function renderBm(){
+$("#bm").innerHTML=""
+for(const b of bookmarks){const x=document.createElement("button");x.textContent=(b.i||"⭐")+" "+b.n;x.onclick=()=>navigate(b.u);$("#bm").appendChild(x)}
+$("#bm").style.display=bookmarks.length?"flex":"none"
+}
+function navigate(v){
+const u=toUrl(v)
+if(!u)return
+load(cur,u)
+}
+$("#omni").addEventListener("keydown",e=>{if(e.key==="Enter"){navigate(e.target.value);e.target.blur()}})
+$("#omni").addEventListener("focus",e=>e.target.select())
+$("#back").onclick=()=>{try{cur.frame.contentWindow.history.back()}catch(e){}}
+$("#fwd").onclick=()=>{try{cur.frame.contentWindow.history.forward()}catch(e){}}
+$("#reload").onclick=()=>{try{cur.frame.contentWindow.location.reload()}catch(e){}}
+$("#homeb").onclick=()=>load(cur,"")
+$("#star").onclick=()=>{
+if(!cur.frame)return toast("Open a page first")
+const i=bookmarks.findIndex(b=>b.u===cur.url)
+if(i>=0){bookmarks.splice(i,1);toast("Bookmark removed")}
+else{bookmarks.push({n:cur.title.slice(0,24),u:cur.url,i:"⭐"});toast("Bookmarked")}
+store.set("bm",bookmarks);renderBm();render()
+}
+$("#dev").onclick=()=>{
+try{
+const w=cur.frame.contentWindow,d=w.document
+if(w.eruda)return w.eruda.show()
+const s=d.createElement("script");s.src="https://cdn.jsdelivr.net/npm/eruda";s.onload=()=>{w.eruda.init();w.eruda.show()};d.head.appendChild(s)
+}catch(e){toast("Open a page first")}
+}
+$("#full").onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}
+function openBlank(){
+const w=window.open("about:blank","_blank")
+if(!w)return toast("Popup blocked")
+w.document.title=cloaks[S.cloak]?.[0]||"about:blank"
+w.document.body.style.cssText="margin:0;height:100vh"
+const f=w.document.createElement("iframe")
+f.src=location.origin+"/app";f.style.cssText="position:fixed;inset:0;width:100%;height:100%;border:0";f.allow="fullscreen;autoplay;gamepad;clipboard-write"
+w.document.body.appendChild(f)
+}
+$("#blank").onclick=openBlank
+
+// ---------- drawer ----------
+let panel=""
+const panels={bookmarks:"⭐ Marks",history:"🕘 History",settings:"⚙️ Settings"}
+function drawer(p){
+if(panel===p||!p){panel="";$("#drawer").classList.remove("on");return}
+panel=p;$("#drawer").classList.add("on")
+$("#dh").innerHTML=""
+for(const k in panels){const b=document.createElement("button");b.textContent=panels[k];b.className=k===p?"on":"";b.onclick=()=>{panel="";drawer(k)};$("#dh").appendChild(b)}
+const x=document.createElement("button");x.className="x";x.textContent="✕";x.onclick=()=>drawer("");$("#dh").appendChild(x)
+const c=$("#dc");c.innerHTML=""
+if(p==="bookmarks"){
+if(!bookmarks.length)c.textContent="No bookmarks yet. Press ☆ on any page."
+bookmarks.forEach((b,i)=>{const d=document.createElement("div");d.className="item";d.innerHTML=`<span></span><button>🗑</button>`;d.querySelector("span").textContent=b.i+" "+b.n;d.onclick=()=>{navigate(b.u);drawer("")};d.querySelector("button").onclick=e=>{e.stopPropagation();bookmarks.splice(i,1);store.set("bm",bookmarks);renderBm();drawer("");drawer("bookmarks");render()};c.appendChild(d)})
+}
+if(p==="history"){
+const cl=document.createElement("button");cl.className="btn alt";cl.textContent="Clear history";cl.onclick=()=>{history=[];store.set("hist",[]);drawer("");drawer("history")};c.appendChild(cl)
+for(const h of history){const d=document.createElement("div");d.className="item";d.innerHTML="<span></span><small></small>";d.querySelector("span").textContent=h.t;d.querySelector("small").textContent=new Date(h.d).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});d.onclick=()=>{navigate(h.u);drawer("")};c.appendChild(d)}
+}
+if(p==="settings")settingsUI(c)
+}
+function settingsUI(c){
+const save=()=>{store.set("settings",S);apply()}
+c.innerHTML=`<h4>Theme</h4><div class="row" id="sw"></div>
+<h4>Search engine</h4><select id="se"><option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option><option value="https://www.bing.com/search?q=%s">Bing</option><option value="https://www.google.com/search?q=%s">Google</option><option value="https://search.brave.com/search?q=%s">Brave</option></select>
+<h4>Tab cloak</h4><select id="ck"><option value="none">Candify (default)</option><option value="classroom">Google Classroom</option><option value="docs">Google Docs</option><option value="drive">Google Drive</option><option value="canvas">Canvas</option><option value="clever">Clever</option><option value="custom">Custom…</option></select>
+<label id="ct">Custom title<input type="text" id="cti"></label><label id="ci">Custom icon URL<input type="text" id="cii"></label>
+<h4>Panic key</h4><label>Key<input type="text" id="pk" maxlength="1"></label><label>Go to<input type="text" id="pu"></label>
+<label class="row"><input type="checkbox" id="wn"> Warn before closing this tab</label>
+<h4>Tools</h4><div class="row"><button class="btn" id="ob">Open in about:blank</button><button class="btn alt" id="ex">Export data</button><button class="btn alt" id="im">Import data</button><button class="btn alt" id="rs">Reset all</button></div>`
+const sw=$("#sw")
+for(const k in themes){const b=document.createElement("button");b.className="sw"+(S.theme===k?" on":"");b.style.background=themes[k];b.title=k;b.onclick=()=>{S.theme=k;save();settingsUI(c)};sw.appendChild(b)}
+$("#se").value=S.engine;$("#se").onchange=e=>{S.engine=e.target.value;save()}
+$("#ck").value=S.cloak;$("#ck").onchange=e=>{S.cloak=e.target.value;save();settingsUI(c)}
+$("#ct").style.display=$("#ci").style.display=S.cloak==="custom"?"grid":"none"
+$("#cti").value=S.ctitle;$("#cti").oninput=e=>{S.ctitle=e.target.value;save()}
+$("#cii").value=S.cicon;$("#cii").oninput=e=>{S.cicon=e.target.value;save()}
+$("#pk").value=S.panicKey;$("#pk").oninput=e=>{S.panicKey=e.target.value;save()}
+$("#pu").value=S.panicUrl;$("#pu").oninput=e=>{S.panicUrl=e.target.value;save()}
+$("#wn").checked=S.warn;$("#wn").onchange=e=>{S.warn=e.target.checked;save()}
+$("#ob").onclick=openBlank
+$("#ex").onclick=()=>{navigator.clipboard.writeText(JSON.stringify({S,bookmarks,history})).then(()=>toast("Copied to clipboard"),()=>toast("Copy failed"))}
+$("#im").onclick=()=>{const t=prompt("Paste exported data");if(!t)return;try{const o=JSON.parse(t);S=Object.assign({},defaults,o.S);bookmarks=o.bookmarks||[];history=o.history||[];store.set("settings",S);store.set("bm",bookmarks);store.set("hist",history);apply();renderBm();render();settingsUI(c);toast("Imported")}catch(e){toast("Invalid data")}}
+$("#rs").onclick=()=>{if(confirm("Reset all Candify data?")){try{Object.keys(localStorage).filter(k=>k.startsWith("cdf.")).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()}}
+}
+$("#menu").onclick=()=>drawer(panel?"":"settings")
+
+// ---------- apply settings ----------
+function apply(){
+document.documentElement.dataset.theme=S.theme
+const c=S.cloak==="custom"?[S.ctitle||"Candify",S.cicon||cloaks.none[1]]:(cloaks[S.cloak]||cloaks.none)
+for(const d of new Set([document,(()=>{try{return parent.document}catch(e){return null}})()])){
+if(!d)continue
+d.title=c[0]
+let l=d.querySelector("link[rel~=icon]");if(!l){l=d.createElement("link");l.rel="icon";d.head.appendChild(l)}
+l.href=c[1]
+}
+window.onbeforeunload=S.warn?()=>"":null
+}
+document.addEventListener("keydown",e=>{
+if(S.panicKey&&e.key===S.panicKey&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){try{(window.top||window).location.href=S.panicUrl}catch(x){location.href=S.panicUrl}}
+if(e.altKey){
+const k=e.key.toLowerCase()
+if(k==="t"){newTab();e.preventDefault()}
+if(k==="w"){close(cur);e.preventDefault()}
+if(k==="l"){$("#omni").focus();e.preventDefault()}
+if(k==="r"){$("#reload").click();e.preventDefault()}
+if(k==="d"){$("#star").click();e.preventDefault()}
+}
+})
+// forward panic key from inside proxied pages
+setInterval(()=>{for(const t of tabs){try{const d=t.frame&&t.frame.contentDocument;if(d&&!d.__cdf){d.__cdf=1;d.addEventListener("keydown",e=>document.dispatchEvent(new KeyboardEvent("keydown",{key:e.key,altKey:e.altKey})))}}catch(e){}}},800)
+
+apply();renderBm();newTab()
+const q=new URLSearchParams(location.search).get("url");if(q)navigate(q)
+</script>
+</body>
+</html>
