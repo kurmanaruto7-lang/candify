@@ -2,334 +2,628 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
 <title>Candify</title>
 <link id="fav" rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="/config.js"></script>
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv.config.js"></script>
 <style>
-:root{--bg:#2a0f45;--panel:#3a1860;--panel2:#4b2278;--acc:#ff4fa3;--acc2:#5ff2c4;--acc3:#ffe45c;--fg:#fff3e6;--mut:#fff3e699}
-[data-theme=mint]{--bg:#0c2b28;--panel:#134540;--panel2:#1b5c55;--acc:#5ff2c4;--acc2:#ffe45c;--acc3:#ff4fa3}
-[data-theme=blueberry]{--bg:#0f1a3d;--panel:#192a63;--panel2:#233b86;--acc:#6c8cff;--acc2:#5ff2c4;--acc3:#ffe45c}
-[data-theme=lemon]{--bg:#2d2a08;--panel:#4a4510;--panel2:#625c18;--acc:#ffe45c;--acc2:#ff4fa3;--acc3:#5ff2c4}
-[data-theme=night]{--bg:#0d0d10;--panel:#18181d;--panel2:#25252d;--acc:#b78cff;--acc2:#5ff2c4;--acc3:#ffe45c}
+:root{
+--bg:#17091f;--bg2:#1f0e2e;--panel:#2a1340;--panel2:#361a52;--line:#ffffff1a;--line2:#ffffff2e;
+--fg:#f6edff;--mut:#f6edffa8;--mut2:#f6edff66;
+--acc:#ff4fa3;--acc-ink:#1a0712;--acc2:#5ff2c4;--acc3:#ffe45c;--info:#6c8cff;
+--ok:#36d399;--warn:#ffb020;--err:#ff5c7a;
+--shadow:0 10px 40px #0007;--radius:16px;--speed:.16s;
+}
+[data-theme=mint]{--acc:#2fe0ad;--acc2:#ffe45c;--acc3:#ff8bc2;--bg:#07211d;--bg2:#0a2a25;--panel:#103b35;--panel2:#174c44}
+[data-theme=blueberry]{--acc:#6c8cff;--acc2:#5ff2c4;--acc3:#ffe45c;--bg:#0b1230;--bg2:#101a42;--panel:#182453;--panel2:#20306b}
+[data-theme=lemon]{--acc:#ffc93c;--acc-ink:#2a1f00;--acc2:#ff6fb0;--acc3:#5ff2c4;--bg:#201d06;--bg2:#2a2708;--panel:#3a360d;--panel2:#4a4512}
+[data-theme=night]{--acc:#b78cff;--acc2:#5ff2c4;--acc3:#ffe45c;--bg:#0b0b10;--bg2:#121219;--panel:#1a1a24;--panel2:#24242f}
+:root[data-mode=light]{--bg:#f4eef9;--bg2:#ece3f5;--panel:#ffffff;--panel2:#f3ecfa;--line:#2a123314;--line2:#2a123326;--fg:#24103a;--mut:#24103a9e;--mut2:#24103a5c;--acc-ink:#fff;--shadow:0 10px 36px #3a1f5522}
+:root[data-mode=light][data-theme=lemon]{--acc-ink:#2a1f00}
 *{box-sizing:border-box;margin:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--fg);font:500 14px Fredoka,system-ui,sans-serif;display:flex;flex-direction:column}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-input,select{font:inherit;color:inherit}
-#tabs{display:flex;gap:4px;padding:6px 8px 0;background:var(--panel);align-items:flex-end;overflow-x:auto;flex:none}
-.tab{display:flex;align-items:center;gap:6px;max-width:200px;min-width:90px;padding:7px 8px 7px 12px;border-radius:12px 12px 0 0;background:var(--bg);opacity:.6;flex:0 1 200px;cursor:pointer}
-.tab.on{opacity:1;background:var(--panel2)}
-.tab span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.tab img{width:14px;height:14px}
-.tab b{width:18px;height:18px;border-radius:50%;line-height:18px;text-align:center;font-size:13px}
-.tab b:hover{background:#fff3}
-#newtab{padding:6px 12px;font-size:18px;color:var(--acc2)}
-#bar{display:flex;gap:6px;align-items:center;padding:7px 8px;background:var(--panel2);flex:none}
-.ib{width:34px;height:34px;border-radius:50%;font-size:16px;flex:none}
-.ib:hover{background:#fff2}
-#omni{flex:1;height:36px;border-radius:999px;border:2px solid transparent;background:var(--bg);padding:0 16px;outline:0;min-width:0}
-#omni:focus{border-color:var(--acc)}
-#bm{display:flex;gap:6px;padding:4px 10px;background:var(--panel);overflow-x:auto;flex:none;min-height:30px}
-#bm button{padding:3px 12px;border-radius:999px;background:var(--bg);white-space:nowrap;font-size:13px}
-#bm button:hover{background:var(--acc);color:var(--bg)}
-#main{flex:1;position:relative;min-height:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:400 14px/1.45 Inter,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-appearance:none}
+input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--acc);color:var(--acc-ink)}
+.brand{font-family:Fredoka,sans-serif;font-weight:700}
+svg.ic{width:1.15em;height:1.15em;display:block;flex:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+:root[data-motion=off] *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+
+/* ---- tab strip ---- */
+#tabs{display:flex;gap:3px;padding:7px 8px 0;background:var(--bg2);align-items:flex-end;overflow-x:auto;flex:none;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+.tab{display:flex;align-items:center;gap:7px;max-width:210px;min-width:46px;padding:8px 9px 8px 13px;border-radius:12px 12px 0 0;background:transparent;color:var(--mut);flex:0 1 190px;cursor:pointer;position:relative;transition:background var(--speed),color var(--speed)}
+.tab:hover{background:var(--panel);color:var(--fg)}
+.tab.on{background:var(--panel);color:var(--fg)}
+.tab .fv{width:15px;height:15px;flex:none;display:grid;place-items:center}
+.tab .fv img{width:15px;height:15px;border-radius:3px}
+.tab .tt{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12.5px;font-weight:500}
+.tab .cl{width:19px;height:19px;border-radius:7px;display:grid;place-items:center;flex:none;opacity:.6}
+.tab .cl:hover{background:var(--line2);opacity:1}
+#newtab{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:var(--mut);flex:none;margin:0 2px 3px}
+#newtab:hover{background:var(--panel);color:var(--acc2)}
+
+/* ---- toolbar ---- */
+#bar{display:flex;gap:4px;align-items:center;padding:8px;background:var(--panel);border-bottom:1px solid var(--line);flex:none}
+.ib{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--mut);font-size:17px;flex:none;transition:background var(--speed),color var(--speed),opacity var(--speed)}
+.ib:hover{background:var(--panel2);color:var(--fg)}
+.ib:disabled{opacity:.3;cursor:default}
+.ib:active{transform:scale(.92)}
+#omniwrap{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 12px;border-radius:999px;background:var(--bg2);border:1.5px solid var(--line);transition:border-color var(--speed),box-shadow var(--speed)}
+#omniwrap.focus{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 22%,transparent)}
+#statusdot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--mut2);transition:background var(--speed);cursor:pointer;position:relative}
+#statusdot.connecting{background:var(--warn);animation:pulse 1.2s ease-in-out infinite}
+#statusdot.connected{background:var(--ok)}
+#statusdot.offline,#statusdot.error{background:var(--err)}
+@keyframes pulse{50%{opacity:.35}}
+#omni{flex:1;min-width:0;height:100%;background:none;border:0;outline:0;font-size:15px}
+#omni::placeholder{color:var(--mut2)}
+#omniclear{width:26px;height:26px;border-radius:50%;display:none;place-items:center;color:var(--mut);flex:none}
+#omniclear:hover{background:var(--line2);color:var(--fg)}
+#omniwrap.has #omniclear{display:grid}
+#go{height:32px;padding:0 16px;border-radius:999px;background:var(--acc);color:var(--acc-ink);font-weight:700;display:flex;align-items:center;gap:6px;flex:none;transition:transform var(--speed),filter var(--speed)}
+#go:hover{filter:brightness(1.06)}#go:active{transform:scale(.95)}
+.actions{display:flex;gap:2px}
+
+/* ---- announcement ---- */
+#announce{display:none;align-items:center;gap:10px;padding:9px 14px;background:color-mix(in srgb,var(--info) 22%,var(--panel));color:var(--fg);font-size:13px;border-bottom:1px solid var(--line);flex:none}
+#announce.on{display:flex}
+#announce .ic{color:var(--info)}
+#announce button{margin-left:auto;color:var(--mut)}
+
+/* ---- main area ---- */
+#main{flex:1;position:relative;min-height:0;background:var(--bg)}
 iframe.view{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;display:none}
 iframe.view.on{display:block}
-#home{position:absolute;inset:0;overflow:auto;display:none;flex-direction:column;align-items:center;padding:6vh 20px 40px;gap:22px}
-#home.on{display:flex}
-#home h1{font-size:clamp(48px,10vw,96px);color:var(--acc3);text-shadow:4px 4px 0 var(--acc);line-height:1}
-#home form{width:min(640px,100%)}
-#home input{width:100%;height:54px;border-radius:999px;border:3px solid var(--acc);background:var(--panel);padding:0 26px;font-size:18px;outline:0}
-#clock{opacity:.7;font-size:15px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;width:min(820px,100%)}
-.tile{display:grid;justify-items:center;gap:6px;padding:14px 6px;border-radius:18px;background:var(--panel);transition:.12s}
-.tile:hover{background:var(--panel2);transform:translateY(-3px)}
-.tile i{font-style:normal;font-size:30px}
-.tile small{font-size:12px;opacity:.85;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-h3{align-self:flex-start;margin:0 auto 0;width:min(820px,100%);color:var(--acc2);font-size:15px}
-#drawer{position:absolute;top:0;right:0;bottom:0;width:min(380px,100%);background:var(--panel);box-shadow:-8px 0 30px #0006;transform:translateX(105%);transition:transform .18s;z-index:5;display:flex;flex-direction:column}
+.overlay{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:28px;background:var(--bg);z-index:3}
+.overlay.on{display:flex;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.overlay .ic{color:var(--acc)}
+.overlay h2{font-size:21px;font-weight:700}
+.overlay p{color:var(--mut);max-width:440px;font-size:14px}
+.overlay .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* ---- start page ---- */
+#start{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;overflow:auto;padding:min(12vh,90px) 20px 48px}
+#start.on{display:flex}
+#start .logo{font-size:clamp(46px,9vw,84px);line-height:1;color:var(--acc3);text-shadow:3px 3px 0 var(--acc);letter-spacing:-.01em}
+#start .tag{color:var(--mut);margin-top:8px;font-size:15px}
+#sform{width:min(680px,100%);margin-top:30px;position:relative;display:flex;align-items:center}
+#sform .si{position:absolute;left:20px;color:var(--mut2);pointer-events:none}
+#sinput{width:100%;height:60px;border-radius:999px;border:2px solid var(--line2);background:var(--panel);padding:0 128px 0 52px;font-size:17px;outline:0;transition:border-color var(--speed),box-shadow var(--speed)}
+#sinput:focus{border-color:var(--acc);box-shadow:0 0 0 5px color-mix(in srgb,var(--acc) 20%,transparent)}
+#sgo{position:absolute;right:8px;height:44px;padding:0 22px;border-radius:999px;background:var(--acc);color:var(--acc-ink);font-weight:700;display:flex;align-items:center;gap:7px;transition:transform var(--speed),filter var(--speed)}
+#sgo:hover{filter:brightness(1.06)}#sgo:active{transform:scale(.96)}
+#statusline{margin-top:18px;display:flex;align-items:center;gap:9px;color:var(--mut);font-size:13px;padding:7px 15px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+#statusline .d{width:8px;height:8px;border-radius:50%;background:var(--mut2)}
+#statusline.connected .d{background:var(--ok)}#statusline.connecting .d{background:var(--warn);animation:pulse 1.2s infinite}
+#statusline.offline .d,#statusline.error .d{background:var(--err)}
+.section{width:min(860px,100%);margin-top:34px}
+.section h3{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:12px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px 8px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);transition:transform var(--speed),background var(--speed),border-color var(--speed);position:relative}
+.tile:hover{background:var(--panel2);transform:translateY(-3px);border-color:var(--line2)}
+.tile .ig{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:var(--bg2);color:var(--acc)}
+.tile .ig img{width:24px;height:24px;border-radius:5px}
+.tile .nm{font-size:12.5px;font-weight:500;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .rm{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:7px;display:none;place-items:center;color:var(--mut);background:var(--bg2)}
+.tile:hover .rm{display:grid}.tile .rm:hover{color:var(--err);background:var(--line2)}
+.empty{color:var(--mut2);font-size:13px;padding:8px 2px}
+.privacy{width:min(860px,100%);margin-top:34px;padding:16px 18px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);font-size:13px;color:var(--mut)}
+.privacy h3{margin-bottom:10px}
+.privacy ul{list-style:none;display:grid;gap:7px}
+.privacy li{display:flex;gap:9px;align-items:flex-start}
+.privacy li .ic{flex:none;margin-top:1px}
+.privacy .y{color:var(--ok)}.privacy .n{color:var(--err)}.privacy .i{color:var(--info)}
+
+/* ---- drawer ---- */
+#scrim{position:absolute;inset:0;background:#0007;opacity:0;pointer-events:none;transition:opacity var(--speed);z-index:8}
+#scrim.on{opacity:1;pointer-events:auto}
+#drawer{position:absolute;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--bg2);border-left:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(102%);transition:transform .22s cubic-bezier(.4,0,.2,1);z-index:9;display:flex;flex-direction:column}
 #drawer.on{transform:none}
-#dh{display:flex;gap:4px;padding:10px;background:var(--panel2)}
-#dh button{flex:1;padding:8px;border-radius:10px}
-#dh button.on{background:var(--acc);color:var(--bg);font-weight:700}
-#dh .x{flex:none;width:36px}
-#dc{flex:1;overflow:auto;padding:14px;display:grid;gap:12px;align-content:start}
-#dc label{display:grid;gap:5px;font-size:13px;color:var(--mut)}
-#dc input[type=text],#dc input:not([type]),#dc select{height:36px;border-radius:10px;border:0;background:var(--bg);padding:0 10px;outline:0;width:100%}
-#dc h4{color:var(--acc3);margin-top:6px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn{padding:8px 14px;border-radius:10px;background:var(--acc);color:var(--bg);font-weight:700}
-.btn.alt{background:var(--bg);color:var(--fg)}
-.item{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--bg);cursor:pointer}
-.item span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.item small{opacity:.55}
-.sw{width:28px;height:28px;border-radius:50%;border:3px solid transparent}
-.sw.on{border-color:#fff}
-#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--acc2);color:var(--bg);padding:8px 18px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:9}
-#toast.on{opacity:1}
+#dh{display:flex;gap:3px;padding:12px 12px 0;flex:none}
+#dh button{flex:1;padding:9px 6px;border-radius:11px 11px 0 0;color:var(--mut);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background var(--speed),color var(--speed)}
+#dh button.on{background:var(--panel);color:var(--fg)}
+#dh button:hover{color:var(--fg)}
+#dclose{flex:none!important;width:40px;padding:9px 0}
+#dc{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:14px;background:var(--panel)}
+.fld{display:flex;flex-direction:column;gap:6px}
+.fld label{font-size:12.5px;color:var(--mut);font-weight:600}
+.fld input,.fld select{height:40px;border-radius:11px;border:1px solid var(--line2);background:var(--bg2);padding:0 12px;outline:0;transition:border-color var(--speed)}
+.fld input:focus,.fld select:focus{border-color:var(--acc)}
+.dh4{color:var(--mut);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+.swrow{display:flex;gap:10px;flex-wrap:wrap}
+.sw{width:34px;height:34px;border-radius:10px;border:2px solid transparent;position:relative;transition:transform var(--speed)}
+.sw:hover{transform:scale(1.08)}.sw.on{border-color:var(--fg)}
+.sw.on::after{content:"";position:absolute;inset:0;display:grid;place-items:center}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 13px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}
+.toggle .tx{font-size:13.5px}.toggle .tx small{display:block;color:var(--mut2);font-size:11.5px;margin-top:2px}
+.swt{width:44px;height:26px;border-radius:999px;background:var(--line2);position:relative;flex:none;transition:background var(--speed)}
+.swt::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform var(--speed)}
+.swt.on{background:var(--acc)}.swt.on::after{transform:translateX(18px)}
+.btn{padding:10px 15px;border-radius:12px;background:var(--acc);color:var(--acc-ink);font-weight:700;display:inline-flex;align-items:center;gap:7px;justify-content:center;transition:filter var(--speed),transform var(--speed)}
+.btn:hover{filter:brightness(1.06)}.btn:active{transform:scale(.97)}
+.btn.alt{background:var(--bg2);color:var(--fg);border:1px solid var(--line2)}
+.btn.danger{background:color-mix(in srgb,var(--err) 20%,var(--bg2));color:var(--err);border:1px solid color-mix(in srgb,var(--err) 40%,transparent)}
+.btn.sm{padding:8px 12px;font-size:13px}
+.item{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);transition:border-color var(--speed)}
+.item:hover{border-color:var(--line2)}
+.item .fv{width:18px;height:18px;flex:none;display:grid;place-items:center}
+.item .fv img{width:18px;height:18px;border-radius:4px}
+.item .meta{flex:1;min-width:0;cursor:pointer}
+.item .meta .t{font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .meta .u{font-size:11.5px;color:var(--mut2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .x{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--mut);flex:none}
+.item .x:hover{color:var(--err);background:var(--line2)}
+
+/* ---- toast ---- */
+#toast{position:absolute;bottom:22px;left:50%;transform:translate(-50%,16px);background:var(--panel);color:var(--fg);border:1px solid var(--line2);padding:10px 18px;border-radius:12px;font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:9px;opacity:0;pointer-events:none;transition:all var(--speed);z-index:20;box-shadow:var(--shadow);max-width:90vw}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#toast .ic{color:var(--acc2)}#toast.err .ic{color:var(--err)}
+
+/* ---- loading bar ---- */
+#loadbar{position:absolute;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));z-index:7;opacity:0;transition:width .3s ease,opacity .3s;box-shadow:0 0 8px var(--acc)}
+#loadbar.on{opacity:1}
+
+/* ---- maintenance ---- */
+#maint{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:28px}
+#maint.on{display:flex}
+#maint .ic{color:var(--warn)}#maint h1{font-size:30px}#maint p{color:var(--mut);max-width:460px}
+
+@media(max-width:620px){
+.tab{flex-basis:140px}
+#go span,#sgo span{display:none}#go,#sgo{padding:0 14px}
+.ib{width:34px;height:34px}
+.hidephone{display:none}
+#home,#star,#cloak,#full{display:none}
+#bar{gap:2px;padding:7px 6px}
+#start{padding-top:40px}
+}
 </style>
 </head>
 <body>
+<div id="loadbar"></div>
 <div id="tabs"></div>
 <div id="bar">
-<button class="ib" id="back" title="Back (Alt+←)">←</button>
-<button class="ib" id="fwd" title="Forward">→</button>
-<button class="ib" id="reload" title="Reload (Alt+R)">⟳</button>
-<button class="ib" id="homeb" title="Home">🏠</button>
-<input id="omni" placeholder="Search or enter a URL" autocomplete="off" spellcheck="false">
-<button class="ib" id="star" title="Bookmark (Alt+D)">☆</button>
-<button class="ib" id="dev" title="DevTools (Eruda)">🛠</button>
-<button class="ib" id="blank" title="Open in about:blank">🕶</button>
-<button class="ib" id="full" title="Fullscreen">⛶</button>
-<button class="ib" id="menu" title="Menu">🍭</button>
+<div class="actions">
+<button class="ib" id="back" title="Back" aria-label="Back"></button>
+<button class="ib" id="fwd" title="Forward" aria-label="Forward"></button>
+<button class="ib" id="reload" title="Reload" aria-label="Reload"></button>
+<button class="ib" id="home" title="New tab page" aria-label="Home"></button>
 </div>
-<div id="bm"></div>
+<div id="omniwrap">
+<span id="statusdot" title="Proxy status"></span>
+<input id="omni" placeholder="Search or enter a URL" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" inputmode="url">
+<button id="omniclear" title="Clear" aria-label="Clear"></button>
+<button id="go">GO</button>
+</div>
+<div class="actions">
+<button class="ib" id="star" title="Add to favorites" aria-label="Favorite"></button>
+<button class="ib" id="cloak" title="Open in about:blank"></button>
+<button class="ib" id="full" title="Fullscreen"></button>
+<button class="ib" id="menu" title="Menu"></button>
+</div>
+</div>
+<div id="announce"><span class="ic" data-ic="info"></span><span id="announce-t"></span><button id="announce-x" aria-label="Dismiss"></button></div>
 <div id="main">
-<div id="home" class="on"></div>
+<div id="start"></div>
+<div id="err" class="overlay"></div>
+<div id="scrim"></div>
 <div id="drawer"><div id="dh"></div><div id="dc"></div></div>
 </div>
 <div id="toast"></div>
+<div id="maint"><span class="ic" data-ic="construction"></span><h1 class="brand">Under maintenance</h1><p id="maint-t"></p><div class="row"><button class="btn alt" id="maint-retry"><span data-ic="refresh"></span> Check again</button></div></div>
+
 <script>
+/* ========================= icons (inline Lucide) ========================= */
+const ICONS={
+back:'<polyline points="15 18 9 12 15 6"/>',fwd:'<polyline points="9 18 15 12 9 6"/>',
+refresh:'<path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>',
+home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+go:'<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+star:'<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/>',
+starf:'<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2" fill="currentColor"/>',
+eyeoff:'<path d="M9.9 4.2A9.1 9.1 0 0 1 12 4c7 0 10 8 10 8a13 13 0 0 1-1.7 2.7"/><path d="M6.6 6.6A13 13 0 0 0 2 12s3 8 10 8a9 9 0 0 0 5.4-1.6"/><line x1="2" y1="2" x2="22" y2="22"/>',
+full:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',
+menu:'<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>',
+plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+clock:'<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>',
+bookmark:'<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
+shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+sun:'<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/>',
+moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',
+info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+check:'<polyline points="20 6 9 17 4 12"/>',
+wifioff:'<line x1="2" y1="2" x2="22" y2="22"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.6a10 10 0 0 1 5.2-2.5"/><path d="M19 12.6a10 10 0 0 0-3.4-2.3"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M22 8.8a15 15 0 0 0-8.7-2.7"/><line x1="12" y1="20" x2="12.01" y2="20"/>',
+globe:'<circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z"/>',
+zap:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+link:'<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>',
+construction:'<rect x="2" y="6" width="20" height="8" rx="1"/><path d="M17 14v7M7 14v7M17 3v3M7 3v3M2 10h20"/>',
+gauge:'<path d="M12 14l3.5-3.5"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/>',
+layout:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+spark:'<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>'
+}
+function ic(n,cls){return '<svg class="ic '+(cls||'')+'" viewBox="0 0 24 24">'+(ICONS[n]||'')+'</svg>'}
+function paintIcons(root){(root||document).querySelectorAll('[data-ic]').forEach(e=>{e.outerHTML=ic(e.getAttribute('data-ic'),e.className)})}
+
+/* ========================= storage + config ========================= */
 const $=s=>document.querySelector(s)
-const store={
-get(k,d){try{const v=localStorage.getItem("cdf."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
-set(k,v){try{localStorage.setItem("cdf."+k,JSON.stringify(v))}catch(e){}}
-}
-const defaults={theme:"candy",engine:"https://duckduckgo.com/?q=%s",cloak:"none",ctitle:"",cicon:"",panicKey:"`",panicUrl:"https://classroom.google.com",warn:false,openBlank:false}
-let S=Object.assign({},defaults,store.get("settings",{}))
-let bookmarks=store.get("bm",[
-{n:"YouTube",u:"https://www.youtube.com",i:"▶️"},{n:"Google",u:"https://www.google.com",i:"🔎"},
-{n:"Wikipedia",u:"https://www.wikipedia.org",i:"📚"},{n:"Reddit",u:"https://www.reddit.com",i:"👽"},
-{n:"DuckDuckGo",u:"https://duckduckgo.com",i:"🦆"},{n:"Fern",u:location.origin+"/s3/gfdd/index.html",i:"🌿"}])
-let history=store.get("hist",[])
-const cloaks={
-none:["Candify","data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>"],
-classroom:["Classes","https://ssl.gstatic.com/classroom/favicon.png"],
-docs:["Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],
-drive:["My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png"],
-canvas:["Dashboard","https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico"],
-clever:["Clever | Portal","https://assets.clever.com/launchpad/favicon.ico"]
-}
-const themes={candy:"#ff4fa3",mint:"#5ff2c4",blueberry:"#6c8cff",lemon:"#ffe45c",night:"#b78cff"}
-const quick=[["🎮","Games",""],["📺","YouTube","https://www.youtube.com"],["🎵","Spotify","https://open.spotify.com"],["💬","Discord","https://discord.com/app"],["🤖","ChatGPT","https://chatgpt.com"],["🎬","Twitch","https://www.twitch.tv"],["📰","Hacker News","https://news.ycombinator.com"],["🗺️","Maps","https://www.openstreetmap.org"]].filter(q=>q[2])
+const store={get(k,d){try{const v=localStorage.getItem('cdf.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+set(k,v){try{localStorage.setItem('cdf.'+k,JSON.stringify(v))}catch(e){}}}
+const defaults={theme:'candy',mode:'dark',engine:'https://duckduckgo.com/?q=%s',motion:true,startup:'newtab',cloak:'none',panicKey:'',panicUrl:'https://classroom.google.com'}
+let S=Object.assign({},defaults,store.get('settings',{}))
+const saveS=()=>store.set('settings',S)
+let favorites=store.get('favs',[
+{n:'YouTube',u:'https://www.youtube.com'},{n:'Google',u:'https://www.google.com'},
+{n:'Wikipedia',u:'https://www.wikipedia.org'},{n:'Reddit',u:'https://www.reddit.com'},
+{n:'Discord',u:'https://discord.com/app'},{n:'Spotify',u:'https://open.spotify.com'}])
+let hist=store.get('hist',[])
+const saveFav=()=>store.set('favs',favorites),saveHist=()=>store.set('hist',hist)
+const themes={candy:'#ff4fa3',mint:'#2fe0ad',blueberry:'#6c8cff',lemon:'#ffc93c',night:'#b78cff'}
+const cloaks={none:['Candify',''],classroom:['Classes','https://ssl.gstatic.com/classroom/favicon.png'],
+docs:['Untitled document - Google Docs','https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'],
+drive:['My Drive - Google Drive','https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png'],
+canvas:['Dashboard','https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico']}
 
-function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1800)}
+/* proxy engine + backend API base */
 const C=self.__uv$config
-const wispUrl=()=>window.CANDIFY_WISP||((location.protocol==="https:"?"wss://":"ws://")+location.host+"/wisp/")
-const ready=(async()=>{
-await navigator.serviceWorker.register("/sw.js",{scope:C.prefix})
-await navigator.serviceWorker.ready
-const {BareMuxConnection}=await import("/baremux/index.mjs")
-const c=new BareMuxConnection("/baremux/worker.js")
-await c.setTransport("/epoxy/index.mjs",[{wisp:wispUrl()}])
-})().catch(e=>{toast("Proxy engine failed: "+e.message);console.error(e)})
-function toUrl(v){
-v=v.trim()
-if(!v)return""
-if(/^[a-z][a-z0-9+.-]*:\/\//i.test(v))return v
-if(/^[^\s/]+\.[a-z]{2,}(:\d+)?([/?#].*)?$/i.test(v))return"https://"+v
-return S.engine.replace("%s",encodeURIComponent(v))
-}
-function realUrl(src){
-const i=(src||"").indexOf(C.prefix)
-if(i<0)return src||""
-try{return C.decodeUrl(src.slice(i+C.prefix.length))}catch(e){return""}
+const STATIC=!!window.CANDIFY_STATIC
+const NOAPI=!!window.CANDIFY_NOAPI   // Workers-Wisp mode: proxy works, but no /api backend (owner/status/maintenance off)
+const wispUrl=()=>window.CANDIFY_WISP||((location.protocol==='https:'?'wss://':'ws://')+location.host+'/wisp/')
+const API=(()=>{const w=window.CANDIFY_WISP;if(!w)return location.origin;try{return new URL(w).origin.replace(/^ws/,'http')}catch(e){return location.origin}})()
+const favicon=u=>{try{return 'https://www.google.com/s2/favicons?sz=64&domain='+new URL(u).hostname}catch(e){return ''}}
+
+/* ========================= theme ========================= */
+function applyTheme(){
+const r=document.documentElement
+r.dataset.theme=S.theme;r.dataset.mode=S.mode;r.dataset.motion=S.motion?'on':'off'
+const c=cloaks[S.cloak]||cloaks.none
+try{document.title=c[0]}catch(e){}
+const fav=$('#fav');if(S.cloak!=='none'&&c[1])fav.href=c[1]
+else fav.href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>"
 }
 
-// ---------- tabs ----------
-let tabs=[],cur=null,nid=1
-function newTab(url){
-const t={id:nid++,title:"New Tab",url:"",frame:null}
-tabs.push(t)
-if(url)load(t,url)
-select(t)
-return t
+/* ========================= toast ========================= */
+let toastT
+function toast(msg,kind){const e=$('#toast');e.className=kind==='err'?'err':'';e.innerHTML=ic(kind==='err'?'alert':'check')+'<span></span>';e.querySelector('span').textContent=msg;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),kind==='err'?3200:1900)}
+
+/* ========================= proxy status ========================= */
+let proxyState='connecting',latency=null
+function setState(s){proxyState=s;$('#statusdot').className=s;const sl=$('#statusline');if(sl)sl.className=s;renderStatusLine()}
+function renderStatusLine(){const sl=$('#statusline');if(!sl)return
+const label={connecting:'Connecting to proxy…',connected:'Proxy connected'+(latency!=null?' · '+latency+' ms':''),offline:'Backend offline',error:'Proxy error'}[proxyState]||''
+sl.innerHTML='<span class="d"></span>'+ic(proxyState==='connected'?'globe':proxyState==='offline'?'wifioff':'gauge')+'<span>'+label+'</span>'}
+
+const engineReady=STATIC?Promise.resolve():(async()=>{
+const reg=await navigator.serviceWorker.register('/sw.js',{scope:C.prefix})
+const w=reg.installing||reg.waiting||reg.active
+if(w&&w.state!=='activated')await new Promise(r=>w.addEventListener('statechange',()=>{if(w.state==='activated')r()}))
+const {BareMuxConnection}=await import('/baremux/index'+(window.CANDIFY_ESM||'.mjs'))
+const conn=new BareMuxConnection('/baremux/worker.js')
+const owner=localStorage.getItem('cdf.ownertoken')
+await conn.setTransport('/epoxy/index'+(window.CANDIFY_ESM||'.mjs'),[{wisp:wispUrl()+(owner?'?owner='+owner:'')}])
+})()
+
+async function pingBackend(){
+try{const t0=performance.now()
+const r=await fetch(API+'/api/status',{cache:'no-store'})
+latency=Math.round(performance.now()-t0)
+if(!r.ok)throw 0
+const d=await r.json()
+if(d.maintenance&&!localStorage.getItem('cdf.ownertoken')){showMaintenance(d);return}
+return d
+}catch(e){latency=null;setState('offline');return null}
 }
-function load(t,url){
-url=toUrl(url)
-if(!url){t.url="";t.title="New Tab";if(t.frame){t.frame.remove();t.frame=null}render();return}
-t.url=url;t.title=url.replace(/^https?:\/\//,"").slice(0,40)
-if(!t.frame){
-const f=document.createElement("iframe")
-f.className="view";f.allow="fullscreen;autoplay;gamepad;clipboard-write;microphone;camera"
-f.addEventListener("load",()=>onLoad(t))
-$("#main").prepend(f);t.frame=f
+async function initEngine(){
+setState('connecting')
+try{await engineReady}catch(e){setState('error');showError('engine',e&&e.message);return}
+if(STATIC||NOAPI){setState('connected');return}   // no /api to ping; proven on first real navigation
+const ok=await pingBackend()
+setState(ok?'connected':'offline')
 }
-const f2=t.frame;ready.then(()=>{f2.src=url.startsWith(location.origin)||url.startsWith("/")?url:C.prefix+C.encodeUrl(url)})
+
+/* ========================= tabs ========================= */
+let tabs=[],cur=null,nid=1,watchdog={}
+const isProxied=u=>u&&!u.startsWith(location.origin)&&!/^\/|^about:/.test(u)
+function newTab(url){const t={id:nid++,title:'New Tab',url:'',icon:'',frame:null,loading:false};tabs.push(t);select(t);if(url)load(t,url);return t}
+function closeTab(t){const i=tabs.indexOf(t);if(t.frame)t.frame.remove();tabs.splice(i,1);if(!tabs.length)return newTab();if(cur===t)cur=tabs[Math.min(i,tabs.length-1)];render()}
+function select(t){cur=t;render();if(!t.frame)setTimeout(()=>$('#sinput')&&$('#sinput').focus(),30)}
+
+function load(t,input){
+const url=toUrl(input)
+if(!url){return}
+t.url=url;t.title=hostShort(url);t.loading=true
+if(!t.frame){const f=document.createElement('iframe');f.className='view';f.allow='fullscreen;autoplay;gamepad;clipboard-write;microphone;camera;encrypted-media'
+f.addEventListener('load',()=>onFrameLoad(t));$('#main').prepend(f);t.frame=f}
+loadbar(true)
+clearTimeout(watchdog[t.id])
+watchdog[t.id]=setTimeout(()=>{if(t.loading){t.loading=false;loadbar(false);if(t===cur)showError('timeout',url)}},28000)
+const f=t.frame
+engineReady.then(()=>{f.src=(STATIC||url.startsWith(location.origin)||url.startsWith('/'))?url:C.prefix+C.encodeUrl(url)})
+.catch(e=>{setState('error');showError('engine',e&&e.message)})
 render()
 }
-function onLoad(t){
-try{
-const w=t.frame.contentWindow,u=realUrl(w.location.pathname)
-if(!u)return
-t.url=u
-const ti=w.document.title
-t.title=ti||u.replace(/^https?:\/\//,"").slice(0,40)
-try{t.icon="https://www.google.com/s2/favicons?sz=32&domain="+new URL(u).hostname}catch(e){}
-if(!u.startsWith(location.origin)){history=history.filter(h=>h.u!==u);history.unshift({u,t:t.title,d:Date.now()});history=history.slice(0,200);store.set("hist",history)}
-}catch(e){}
+function onFrameLoad(t){
+t.loading=false;clearTimeout(watchdog[t.id]);if(t===cur)loadbar(false)
+try{const w=t.frame.contentWindow,real=realUrl(w.location.pathname)
+if(real){t.url=real;const d=w.document
+// detect UV's internal error page
+if(d.getElementById&&d.getElementById('errorTitle')&&d.title==='Error'){if(t===cur)showError('dest',real);return}
+t.title=(d.title||hostShort(real)).slice(0,80);t.icon=favicon(real)
+if(FEAT.history&&isProxied(real)){hist=hist.filter(h=>h.u!==real);hist.unshift({u:real,t:t.title,d:Date.now()});hist=hist.slice(0,300);saveHist()}
+hideError()
+}}catch(e){/* cross-origin: still proxied & fine */}
+if(t===cur)setState('connected')
 render()
 }
-function select(t){cur=t;render()}
-function close(t){
-const i=tabs.indexOf(t)
-if(t.frame)t.frame.remove()
-tabs.splice(i,1)
-if(!tabs.length)return newTab()
-if(cur===t)cur=tabs[Math.max(0,i-1)]
-render()
+function realUrl(src){const i=(src||'').indexOf(C.prefix);if(i<0)return src||'';try{return C.decodeUrl(src.slice(i+C.prefix.length))}catch(e){return ''}}
+function hostShort(u){return u.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'').slice(0,60)}
+
+/* ========================= URL handling / validation ========================= */
+function toUrl(v){v=(v||'').trim();if(!v)return''
+if(v==='about:blank')return'about:blank'
+if(/^[a-z][a-z0-9+.-]*:\/\//i.test(v)){try{new URL(v);return v}catch(e){return S.engine.replace('%s',encodeURIComponent(v))}}
+if(/^[^\s./]+\.[a-z]{2,}([/:?#].*)?$/i.test(v)||/^localhost(:\d+)?/.test(v)||/^\d{1,3}(\.\d{1,3}){3}/.test(v))return'https://'+v
+return S.engine.replace('%s',encodeURIComponent(v))
 }
+
+/* ========================= loading bar ========================= */
+let lbT
+function loadbar(on){const b=$('#loadbar')
+if(on){b.classList.add('on');b.style.width='18%';clearInterval(lbT);let w=18;lbT=setInterval(()=>{w+=Math.max(.5,(85-w)*.08);b.style.width=Math.min(w,85)+'%'},220)}
+else{clearInterval(lbT);b.style.width='100%';setTimeout(()=>{b.classList.remove('on');b.style.width='0'},280)}}
+
+/* ========================= render ========================= */
 function render(){
-$("#tabs").innerHTML=""
-for(const t of tabs){
-const d=document.createElement("div");d.className="tab"+(t===cur?" on":"")
-d.innerHTML=(t.icon&&t.frame?`<img src="${t.icon}">`:"<i style='font-style:normal'>🍬</i>")+"<span></span><b>×</b>"
-d.querySelector("span").textContent=t.title
-d.onclick=()=>select(t)
-d.querySelector("b").onclick=e=>{e.stopPropagation();close(t)}
-d.onauxclick=e=>{if(e.button===1)close(t)}
-$("#tabs").appendChild(d)
-}
-const n=document.createElement("button");n.id="newtab";n.textContent="+";n.onclick=()=>newTab();$("#tabs").appendChild(n)
-for(const t of tabs)if(t.frame)t.frame.classList.toggle("on",t===cur)
-$("#home").classList.toggle("on",!cur.frame)
-if(!cur.frame)renderHome()
-if(document.activeElement!==$("#omni"))$("#omni").value=cur.url&&!cur.url.startsWith(location.origin)?cur.url:""
-$("#star").textContent=bookmarks.some(b=>b.u===cur.url)?"★":"☆"
+// tab strip
+const ts=$('#tabs');ts.innerHTML=''
+tabs.forEach(t=>{const d=document.createElement('div');d.className='tab'+(t===cur?' on':'')
+d.innerHTML='<span class="fv">'+(t.loading?ic('refresh','spin'):(t.icon?'<img src="'+t.icon+'" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{innerHTML:\''+'\'}))">':ic('globe')))+'</span><span class="tt"></span><button class="cl" aria-label="Close">'+ic('x')+'</button>'
+d.querySelector('.tt').textContent=t.title
+d.onclick=()=>select(t);d.querySelector('.cl').onclick=e=>{e.stopPropagation();closeTab(t)}
+d.onauxclick=e=>{if(e.button===1){e.preventDefault();closeTab(t)}}
+ts.appendChild(d)})
+const nb=document.createElement('button');nb.id='newtab';nb.title='New tab (Alt+T)';nb.innerHTML=ic('plus');nb.onclick=()=>newTab();ts.appendChild(nb)
+// frames visibility
+tabs.forEach(t=>{if(t.frame)t.frame.classList.toggle('on',t===cur)})
+const home=cur&&!cur.frame
+$('#start').classList.toggle('on',home)
+if(home)renderStart()
+// omnibox
+const ow=$('#omniwrap'),om=$('#omni')
+if(document.activeElement!==om){om.value=cur&&isProxied(cur.url)?cur.url:''}
+ow.classList.toggle('has',!!om.value)
+$('#back').disabled=$('#fwd').disabled=home
+$('#star').innerHTML=ic(cur&&favorites.some(f=>f.u===cur.url)?'starf':'star')
+$('#reload').innerHTML=ic(cur&&cur.loading?'x':'refresh')
 }
 
-// ---------- home & bookmarks ----------
-function renderHome(){
-const h=$("#home")
-h.innerHTML=`<h1>Candify</h1><div id="clock"></div><form id="hf"><input placeholder="Search the web or type a URL" autofocus></form>
-<h3>Bookmarks</h3><div class="grid" id="bg"></div><h3>Quick links</h3><div class="grid" id="qg"></div>`
-$("#hf").onsubmit=e=>{e.preventDefault();navigate($("#hf input").value)}
-const tile=(i,n,u,del)=>{const b=document.createElement("button");b.className="tile";b.innerHTML=`<i>${i}</i><small></small>`;b.querySelector("small").textContent=n;b.onclick=()=>navigate(u);if(del)b.oncontextmenu=e=>{e.preventDefault();bookmarks=bookmarks.filter(x=>x.u!==u);store.set("bm",bookmarks);renderBm();render();toast("Bookmark removed")};return b}
-for(const b of bookmarks)$("#bg").appendChild(tile(b.i||"⭐",b.n,b.u,true))
-for(const q of quick)$("#qg").appendChild(tile(q[0],q[1],q[2]))
-const c=()=>{const e=$("#clock");if(e)e.textContent=new Date().toLocaleString([], {weekday:"long",hour:"numeric",minute:"2-digit"})}
-c()
+/* ========================= start / new-tab page ========================= */
+function renderStart(){
+const s=$('#start')
+const showFav=FEAT.quickLaunch&&FEAT.favorites&&favorites.length
+const showRec=FEAT.quickLaunch&&FEAT.history&&hist.length
+s.innerHTML='<div class="brand logo">'+cfgSiteName()+'</div><div class="tag">Fast, private proxy browser</div>'
++'<form id="sform"><span class="si">'+ic('search')+'</span><input id="sinput" placeholder="Search the web or type a URL" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" inputmode="url"><button id="sgo" type="submit">'+ic('go')+'<span>Go</span></button></form>'
++'<div id="statusline"></div>'
++(showFav?'<div class="section"><h3>'+ic('star')+'Favorites</h3><div class="grid" id="favgrid"></div></div>':'')
++(showRec?'<div class="section"><h3>'+ic('clock')+'Recent</h3><div class="grid" id="recgrid"></div></div>':'')
++'<div class="privacy"><h3>'+ic('shield')+'What Candify does</h3><ul>'
++'<li><span class="ic y" data-ic="check"></span><span>Routes the page you open through this proxy, so the site you visit sees the proxy, not your network directly.</span></li>'
++'<li><span class="ic y" data-ic="check"></span><span>Strips headers that stop pages loading in a frame, so more sites work.</span></li>'
++'<li><span class="ic n" data-ic="x"></span><span>Does <b>not</b> make you anonymous. Your network and the proxy host can still see traffic. Don\'t use it for anything sensitive.</span></li>'
++'<li><span class="ic i" data-ic="info"></span><span>History and favorites are stored only in this browser (local storage). Clear them anytime in Settings.</span></li>'
++'</ul></div>'
+renderStatusLine()
+const fg=$('#favgrid');if(fg)favorites.forEach(f=>fg.appendChild(tile(f.n,f.u,true,'fav')))
+const rg=$('#recgrid');if(rg)hist.slice(0,12).forEach(h=>rg.appendChild(tile(h.t,h.u,true,'hist')))
+paintIcons(s)
+const sf=$('#sform'),si=$('#sinput')
+sf.onsubmit=e=>{e.preventDefault();if(si.value.trim())load(cur,si.value)}
+si.oninput=()=>{}
+setTimeout(()=>si&&si.focus(),20)
 }
-function renderBm(){
-$("#bm").innerHTML=""
-for(const b of bookmarks){const x=document.createElement("button");x.textContent=(b.i||"⭐")+" "+b.n;x.onclick=()=>navigate(b.u);$("#bm").appendChild(x)}
-$("#bm").style.display=bookmarks.length?"flex":"none"
+function tile(name,url,removable,kind){
+const b=document.createElement('button');b.className='tile'
+const fi=favicon(url)
+b.innerHTML='<span class="ig">'+(fi?'<img src="'+fi+'" onerror="this.parentNode.innerHTML=\''+'\'">':ic('globe'))+'</span><span class="nm"></span>'+(removable?'<span class="rm" title="Remove">'+ic('x')+'</span>':'')
+b.querySelector('.nm').textContent=name||hostShort(url)
+if(!fi)b.querySelector('.ig').innerHTML=ic('globe')
+b.onclick=e=>{if(e.target.closest('.rm'))return;load(cur,url)}
+const rm=b.querySelector('.rm');if(rm)rm.onclick=e=>{e.stopPropagation()
+if(kind==='fav'){favorites=favorites.filter(f=>f.u!==url);saveFav()}else{hist=hist.filter(h=>h.u!==url);saveHist()}
+renderStart()}
+return b
 }
-function navigate(v){
-const u=toUrl(v)
-if(!u)return
-load(cur,u)
-}
-$("#omni").addEventListener("keydown",e=>{if(e.key==="Enter"){navigate(e.target.value);e.target.blur()}})
-$("#omni").addEventListener("focus",e=>e.target.select())
-$("#back").onclick=()=>{try{cur.frame.contentWindow.history.back()}catch(e){}}
-$("#fwd").onclick=()=>{try{cur.frame.contentWindow.history.forward()}catch(e){}}
-$("#reload").onclick=()=>{try{cur.frame.contentWindow.location.reload()}catch(e){}}
-$("#homeb").onclick=()=>load(cur,"")
-$("#star").onclick=()=>{
-if(!cur.frame)return toast("Open a page first")
-const i=bookmarks.findIndex(b=>b.u===cur.url)
-if(i>=0){bookmarks.splice(i,1);toast("Bookmark removed")}
-else{bookmarks.push({n:cur.title.slice(0,24),u:cur.url,i:"⭐"});toast("Bookmarked")}
-store.set("bm",bookmarks);renderBm();render()
-}
-$("#dev").onclick=()=>{
-try{
-const w=cur.frame.contentWindow,d=w.document
-if(w.eruda)return w.eruda.show()
-const s=d.createElement("script");s.src="https://cdn.jsdelivr.net/npm/eruda";s.onload=()=>{w.eruda.init();w.eruda.show()};d.head.appendChild(s)
-}catch(e){toast("Open a page first")}
-}
-$("#full").onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}
-function openBlank(){
-const w=window.open("about:blank","_blank")
-if(!w)return toast("Popup blocked")
-w.document.title=cloaks[S.cloak]?.[0]||"about:blank"
-w.document.body.style.cssText="margin:0;height:100vh"
-const f=w.document.createElement("iframe")
-f.src=location.origin+"/app";f.style.cssText="position:fixed;inset:0;width:100%;height:100%;border:0";f.allow="fullscreen;autoplay;gamepad;clipboard-write"
-w.document.body.appendChild(f)
-}
-$("#blank").onclick=openBlank
 
-// ---------- drawer ----------
-let panel=""
-const panels={bookmarks:"⭐ Marks",history:"🕘 History",settings:"⚙️ Settings"}
-function drawer(p){
-if(panel===p||!p){panel="";$("#drawer").classList.remove("on");return}
-panel=p;$("#drawer").classList.add("on")
-$("#dh").innerHTML=""
-for(const k in panels){const b=document.createElement("button");b.textContent=panels[k];b.className=k===p?"on":"";b.onclick=()=>{panel="";drawer(k)};$("#dh").appendChild(b)}
-const x=document.createElement("button");x.className="x";x.textContent="✕";x.onclick=()=>drawer("");$("#dh").appendChild(x)
-const c=$("#dc");c.innerHTML=""
-if(p==="bookmarks"){
-if(!bookmarks.length)c.textContent="No bookmarks yet. Press ☆ on any page."
-bookmarks.forEach((b,i)=>{const d=document.createElement("div");d.className="item";d.innerHTML=`<span></span><button>🗑</button>`;d.querySelector("span").textContent=b.i+" "+b.n;d.onclick=()=>{navigate(b.u);drawer("")};d.querySelector("button").onclick=e=>{e.stopPropagation();bookmarks.splice(i,1);store.set("bm",bookmarks);renderBm();drawer("");drawer("bookmarks");render()};c.appendChild(d)})
+/* ========================= error overlay ========================= */
+const ERR={
+engine:['alert','Proxy engine failed to start','The proxy backend may be offline, or your network blocked it. Check that the server is running, then retry.'],
+timeout:['clock','This is taking too long','The destination didn\'t respond in time. It may be slow, down, or blocking the proxy.'],
+dest:['globe','Couldn\'t load that site','The proxy reached out but the destination failed or refused the connection. Try another URL.'],
+offline:['wifioff','Backend offline','Can\'t reach the proxy backend right now. It may be asleep or restarting.']
 }
-if(p==="history"){
-const cl=document.createElement("button");cl.className="btn alt";cl.textContent="Clear history";cl.onclick=()=>{history=[];store.set("hist",[]);drawer("");drawer("history")};c.appendChild(cl)
-for(const h of history){const d=document.createElement("div");d.className="item";d.innerHTML="<span></span><small></small>";d.querySelector("span").textContent=h.t;d.querySelector("small").textContent=new Date(h.d).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});d.onclick=()=>{navigate(h.u);drawer("")};c.appendChild(d)}
+let errUrl=''
+function showError(kind,url){errUrl=url||(cur&&cur.url)||''
+const e=$('#err');const [icn,h,p]=ERR[kind]||ERR.dest
+e.innerHTML=ic(icn)+'<h2>'+h+'</h2><p>'+p+(url?'<br><br><code style="opacity:.7;font-size:12px">'+String(url).slice(0,120).replace(/[<>&]/g,'')+'</code>':'')+'</p><div class="row"><button class="btn" id="e-retry">'+ic('refresh')+'<span>Retry</span></button><button class="btn alt" id="e-home">'+ic('home')+'<span>New tab</span></button></div>'
+e.classList.add('on')
+$('#e-retry').onclick=()=>{hideError();if(kind==='engine'||kind==='offline')location.reload();else if(errUrl)load(cur,errUrl)}
+$('#e-home').onclick=()=>{hideError();if(cur.frame){cur.frame.remove();cur.frame=null;cur.url='';cur.title='New Tab'}render()}
 }
-if(p==="settings")settingsUI(c)
-}
-function settingsUI(c){
-const save=()=>{store.set("settings",S);apply()}
-c.innerHTML=`<h4>Theme</h4><div class="row" id="sw"></div>
-<h4>Search engine</h4><select id="se"><option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option><option value="https://www.bing.com/search?q=%s">Bing</option><option value="https://www.google.com/search?q=%s">Google</option><option value="https://search.brave.com/search?q=%s">Brave</option></select>
-<h4>Tab cloak</h4><select id="ck"><option value="none">Candify (default)</option><option value="classroom">Google Classroom</option><option value="docs">Google Docs</option><option value="drive">Google Drive</option><option value="canvas">Canvas</option><option value="clever">Clever</option><option value="custom">Custom…</option></select>
-<label id="ct">Custom title<input type="text" id="cti"></label><label id="ci">Custom icon URL<input type="text" id="cii"></label>
-<h4>Panic key</h4><label>Key<input type="text" id="pk" maxlength="1"></label><label>Go to<input type="text" id="pu"></label>
-<label class="row"><input type="checkbox" id="wn"> Warn before closing this tab</label>
-<h4>Tools</h4><div class="row"><button class="btn" id="ob">Open in about:blank</button><button class="btn alt" id="ex">Export data</button><button class="btn alt" id="im">Import data</button><button class="btn alt" id="rs">Reset all</button></div>`
-const sw=$("#sw")
-for(const k in themes){const b=document.createElement("button");b.className="sw"+(S.theme===k?" on":"");b.style.background=themes[k];b.title=k;b.onclick=()=>{S.theme=k;save();settingsUI(c)};sw.appendChild(b)}
-$("#se").value=S.engine;$("#se").onchange=e=>{S.engine=e.target.value;save()}
-$("#ck").value=S.cloak;$("#ck").onchange=e=>{S.cloak=e.target.value;save();settingsUI(c)}
-$("#ct").style.display=$("#ci").style.display=S.cloak==="custom"?"grid":"none"
-$("#cti").value=S.ctitle;$("#cti").oninput=e=>{S.ctitle=e.target.value;save()}
-$("#cii").value=S.cicon;$("#cii").oninput=e=>{S.cicon=e.target.value;save()}
-$("#pk").value=S.panicKey;$("#pk").oninput=e=>{S.panicKey=e.target.value;save()}
-$("#pu").value=S.panicUrl;$("#pu").oninput=e=>{S.panicUrl=e.target.value;save()}
-$("#wn").checked=S.warn;$("#wn").onchange=e=>{S.warn=e.target.checked;save()}
-$("#ob").onclick=openBlank
-$("#ex").onclick=()=>{navigator.clipboard.writeText(JSON.stringify({S,bookmarks,history})).then(()=>toast("Copied to clipboard"),()=>toast("Copy failed"))}
-$("#im").onclick=()=>{const t=prompt("Paste exported data");if(!t)return;try{const o=JSON.parse(t);S=Object.assign({},defaults,o.S);bookmarks=o.bookmarks||[];history=o.history||[];store.set("settings",S);store.set("bm",bookmarks);store.set("hist",history);apply();renderBm();render();settingsUI(c);toast("Imported")}catch(e){toast("Invalid data")}}
-$("#rs").onclick=()=>{if(confirm("Reset all Candify data?")){try{Object.keys(localStorage).filter(k=>k.startsWith("cdf.")).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()}}
-}
-$("#menu").onclick=()=>drawer(panel?"":"settings")
+function hideError(){$('#err').classList.remove('on')}
 
-// ---------- apply settings ----------
-function apply(){
-document.documentElement.dataset.theme=S.theme
-const c=S.cloak==="custom"?[S.ctitle||"Candify",S.cicon||cloaks.none[1]]:(cloaks[S.cloak]||cloaks.none)
-for(const d of new Set([document,(()=>{try{return parent.document}catch(e){return null}})()])){
-if(!d)continue
-d.title=c[0]
-let l=d.querySelector("link[rel~=icon]");if(!l){l=d.createElement("link");l.rel="icon";d.head.appendChild(l)}
-l.href=c[1]
+/* ========================= maintenance ========================= */
+function showMaintenance(d){$('#maint-t').textContent=d.maintenanceMsg||'Candify is down for maintenance.';$('#maint').classList.add('on')}
+$('#maint-retry').onclick=()=>location.reload()
+
+/* ========================= drawer ========================= */
+let panel=''
+const PANELS={settings:['settings','Settings'],history:['clock','History'],favorites:['bookmark','Favorites']}
+function openDrawer(p){panel=p;$('#scrim').classList.add('on');$('#drawer').classList.add('on');renderDrawer()}
+function closeDrawer(){$('#scrim').classList.remove('on');$('#drawer').classList.remove('on')}
+$('#scrim').onclick=closeDrawer
+function renderDrawer(){
+const dh=$('#dh');dh.innerHTML=''
+const avail=Object.keys(PANELS).filter(k=>k==='settings'||(k==='history'&&FEAT.history)||(k==='favorites'&&FEAT.favorites))
+if(!avail.includes(panel))panel='settings'
+avail.forEach(k=>{const b=document.createElement('button');b.className=k===panel?'on':'';b.innerHTML=ic(PANELS[k][0])+'<span class="hidephone">'+PANELS[k][1]+'</span>';b.onclick=()=>{panel=k;renderDrawer()};dh.appendChild(b)})
+const x=document.createElement('button');x.id='dclose';x.innerHTML=ic('x');x.onclick=closeDrawer;dh.appendChild(x)
+const dc=$('#dc');dc.innerHTML=''
+if(panel==='settings')drawSettings(dc)
+if(panel==='history')drawHistory(dc)
+if(panel==='favorites')drawFavorites(dc)
+paintIcons(dc)
 }
-window.onbeforeunload=S.warn?()=>"":null
+function drawSettings(c){
+c.innerHTML=''
+// appearance
+add('<div class="dh4">Appearance</div>')
+const sw=el('div','swrow');Object.keys(themes).forEach(k=>{const b=el('button','sw'+(S.theme===k?' on':''));b.style.background=themes[k];b.title=k;b.innerHTML=S.theme===k?ic('check'):'';b.onclick=()=>{S.theme=k;saveS();applyTheme();renderDrawer()};sw.appendChild(b)});c.appendChild(sw)
+toggleRow('Light mode','Switch between dark and light',S.mode==='light',v=>{S.mode=v?'light':'dark';saveS();applyTheme()})
+toggleRow('Animations','Turn off for reduced motion',S.motion,v=>{S.motion=v;saveS();applyTheme()})
+// search
+add('<div class="dh4">Browsing</div>')
+fld('Search engine','select',S.engine,v=>{S.engine=v;saveS()},[['https://duckduckgo.com/?q=%s','DuckDuckGo'],['https://www.bing.com/search?q=%s','Bing'],['https://www.google.com/search?q=%s','Google'],['https://search.brave.com/search?q=%s','Brave']])
+fld('Startup','select',S.startup,v=>{S.startup=v;saveS()},[['newtab','Open a new tab'],['resume','(new tab for now)']])
+fld('Tab cloak','select',S.cloak,v=>{S.cloak=v;saveS();applyTheme()},Object.keys(cloaks).map(k=>[k,k==='none'?'Candify (default)':cloaks[k][0]]))
+// panic
+add('<div class="dh4">Panic key</div>')
+const pr=el('div','swrow');pr.style.flexDirection='column';pr.style.width='100%'
+fld('Panic key (one key → jumps away)','text',S.panicKey,v=>{S.panicKey=v.slice(0,1);saveS()})
+fld('Panic goes to','text',S.panicUrl,v=>{S.panicUrl=v;saveS()})
+// data
+add('<div class="dh4">Data</div>')
+const row=el('div','swrow')
+mk(row,'btn alt sm','trash','Clear history',()=>{hist=[];saveHist();toast('History cleared');render()})
+mk(row,'btn alt sm','trash','Clear favorites',()=>{favorites=[];saveFav();toast('Favorites cleared');render()})
+c.appendChild(row)
+const row2=el('div','swrow')
+mk(row2,'btn danger sm','trash','Reset everything',()=>{if(confirm('Reset all Candify data on this browser?')){Object.keys(localStorage).filter(k=>k.startsWith('cdf.')).forEach(k=>localStorage.removeItem(k));location.reload()}})
+c.appendChild(row2)
+// owner (only when our Node backend is in use)
+if(!STATIC&&!NOAPI){
+add('<div class="dh4">Owner</div>')
+const ol=el('div','swrow');mk(ol,'btn alt sm','lock','Owner dashboard',()=>{window.open('/admin.html','_blank')});c.appendChild(ol)
 }
-document.addEventListener("keydown",e=>{
-if(S.panicKey&&e.key===S.panicKey&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){try{(window.top||window).location.href=S.panicUrl}catch(x){location.href=S.panicUrl}}
-if(e.altKey){
-const k=e.key.toLowerCase()
-if(k==="t"){newTab();e.preventDefault()}
-if(k==="w"){close(cur);e.preventDefault()}
-if(k==="l"){$("#omni").focus();e.preventDefault()}
-if(k==="r"){$("#reload").click();e.preventDefault()}
-if(k==="d"){$("#star").click();e.preventDefault()}
+add('<div style="color:var(--mut2);font-size:11.5px">Candify v'+(window.CANDIFY_VERSION||'2.0')+' · proxy '+(STATIC?'static':NOAPI?'workers':'live')+'</div>')
+function add(h){const d=document.createElement('div');d.innerHTML=h;c.appendChild(d.firstChild)}
+function fld(label,type,val,on,opts){const f=el('div','fld');const id='f'+Math.random().toString(36).slice(2)
+let inner='<label>'+label+'</label>'
+if(type==='select')inner+='<select>'+opts.map(o=>'<option value="'+o[0]+'"'+(o[0]===val?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>'
+else inner+='<input type="text" value="'+String(val).replace(/"/g,'&quot;')+'">'
+f.innerHTML=inner;const ctl=f.querySelector('select,input');ctl.onchange=()=>on(ctl.value);if(type==='text')ctl.oninput=()=>on(ctl.value);c.appendChild(f)}
+function toggleRow(t,sub,on,fn){const d=el('div','toggle');d.innerHTML='<div class="tx">'+t+'<small>'+sub+'</small></div><div class="swt'+(on?' on':'')+'"></div>';d.querySelector('.swt').onclick=()=>{const s=!d.querySelector('.swt').classList.contains('on');d.querySelector('.swt').classList.toggle('on',s);fn(s)};c.appendChild(d)}
+function mk(par,cls,icn,txt,fn){const b=el('button',cls);b.innerHTML=ic(icn)+'<span>'+txt+'</span>';b.onclick=fn;par.appendChild(b)}
+function el(t,c){const e=document.createElement(t);if(c)e.className=c;return e}
 }
+function drawHistory(c){
+if(!hist.length){c.innerHTML='<div class="empty">No history yet. Pages you visit show up here.</div>';return}
+const top=document.createElement('button');top.className='btn alt sm';top.innerHTML=ic('trash')+'<span>Clear all history</span>';top.onclick=()=>{hist=[];saveHist();render();renderDrawer()};c.appendChild(top)
+hist.forEach(h=>{const d=document.createElement('div');d.className='item'
+d.innerHTML='<span class="fv"><img src="'+favicon(h.u)+'" onerror="this.replaceWith(document.createRange().createContextualFragment(\''+'\'))"></span><div class="meta"><div class="t"></div><div class="u"></div></div><button class="x">'+ic('trash')+'</button>'
+d.querySelector('.t').textContent=h.t;d.querySelector('.u').textContent=hostShort(h.u)
+d.querySelector('.meta').onclick=()=>{closeDrawer();load(cur,h.u)}
+d.querySelector('.x').onclick=()=>{hist=hist.filter(x=>x.u!==h.u);saveHist();render();renderDrawer()}
+c.appendChild(d)})
+}
+function drawFavorites(c){
+const addrow=document.createElement('div');addrow.className='fld'
+addrow.innerHTML='<label>Add current page</label>'
+const b=document.createElement('button');b.className='btn sm';b.innerHTML=ic('star')+'<span>'+(cur&&isProxied(cur.url)?'Add "'+hostShort(cur.url)+'"':'Open a page first')+'</span>'
+b.disabled=!(cur&&isProxied(cur.url));b.onclick=()=>{toggleFav();renderDrawer()};addrow.appendChild(b);c.appendChild(addrow)
+if(!favorites.length){const e=document.createElement('div');e.className='empty';e.textContent='No favorites yet. Star a page to save it here.';c.appendChild(e);return}
+favorites.forEach(f=>{const d=document.createElement('div');d.className='item'
+d.innerHTML='<span class="fv"><img src="'+favicon(f.u)+'" onerror="this.style.display=\'none\'"></span><div class="meta"><div class="t"></div><div class="u"></div></div><button class="x">'+ic('trash')+'</button>'
+d.querySelector('.t').textContent=f.n;d.querySelector('.u').textContent=hostShort(f.u)
+d.querySelector('.meta').onclick=()=>{closeDrawer();load(cur,f.u)}
+d.querySelector('.x').onclick=()=>{favorites=favorites.filter(x=>x.u!==f.u);saveFav();render();renderDrawer()}
+c.appendChild(d)})
+}
+function toggleFav(){if(!cur||!isProxied(cur.url))return toast('Open a page first','err')
+const i=favorites.findIndex(f=>f.u===cur.url)
+if(i>=0){favorites.splice(i,1);toast('Removed from favorites')}else{favorites.push({n:cur.title.slice(0,40),u:cur.url});toast('Added to favorites')}
+saveFav();render()}
+
+/* ========================= about:blank cloak ========================= */
+function openBlank(){const w=window.open('about:blank','_blank')
+if(!w)return toast('Popup blocked — allow popups and try again','err')
+const c=cloaks[S.cloak]||cloaks.none
+w.document.title=c[0]||'about:blank';w.document.body.style.cssText='margin:0;height:100vh'
+const f=w.document.createElement('iframe');f.src=location.origin+'/app.html';f.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0';f.allow='fullscreen;autoplay;gamepad;clipboard-write'
+w.document.body.appendChild(f);toast('Opened in about:blank')}
+
+/* ========================= toolbar wiring ========================= */
+$('#back').onclick=()=>{try{cur.frame.contentWindow.history.back()}catch(e){}}
+$('#fwd').onclick=()=>{try{cur.frame.contentWindow.history.forward()}catch(e){}}
+$('#reload').onclick=()=>{if(cur&&cur.loading){try{cur.frame.contentWindow.stop()}catch(e){}cur.loading=false;loadbar(false);render();return}try{cur.frame.contentWindow.location.reload()}catch(e){if(cur.url)load(cur,cur.url)}}
+$('#home').onclick=()=>{if(cur.frame){cur.frame.remove();cur.frame=null}cur.url='';cur.title='New Tab';hideError();render()}
+$('#star').onclick=toggleFav
+$('#cloak').onclick=openBlank
+$('#full').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}
+$('#menu').onclick=()=>panel&&$('#drawer').classList.contains('on')?closeDrawer():openDrawer('settings')
+const om=$('#omni')
+om.addEventListener('focus',()=>{$('#omniwrap').classList.add('focus');om.select()})
+om.addEventListener('blur',()=>$('#omniwrap').classList.remove('focus'))
+om.addEventListener('input',()=>$('#omniwrap').classList.toggle('has',!!om.value))
+om.addEventListener('keydown',e=>{if(e.key==='Enter'){if(om.value.trim())load(cur,om.value);om.blur()}if(e.key==='Escape'){om.value=cur&&isProxied(cur.url)?cur.url:'';om.blur()}})
+$('#go').onclick=()=>{if(om.value.trim())load(cur,om.value)}
+$('#omniclear').onclick=()=>{om.value='';$('#omniwrap').classList.remove('has');om.focus()}
+$('#announce-x').onclick=()=>$('#announce').classList.remove('on')
+
+/* keyboard shortcuts */
+document.addEventListener('keydown',e=>{
+if(S.panicKey&&e.key===S.panicKey&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){try{(window.top||window).location.href=S.panicUrl}catch(x){location.href=S.panicUrl}return}
+if(e.altKey){const k=e.key.toLowerCase()
+if(k==='t'){e.preventDefault();newTab()}
+if(k==='w'){e.preventDefault();closeTab(cur)}
+if(k==='l'){e.preventDefault();om.focus()}
+if(k==='r'){e.preventDefault();$('#reload').click()}
+if(k==='d'){e.preventDefault();toggleFav()}}
 })
-// forward panic key from inside proxied pages
-setInterval(()=>{for(const t of tabs){try{const d=t.frame&&t.frame.contentDocument;if(d&&!d.__cdf){d.__cdf=1;d.addEventListener("keydown",e=>document.dispatchEvent(new KeyboardEvent("keydown",{key:e.key,altKey:e.altKey})))}}catch(e){}}},800)
 
-apply();renderBm();newTab()
-const q=new URLSearchParams(location.search).get("url");if(q)navigate(q)
+/* ========================= remote config (site name, announce, maintenance, features) ========================= */
+let FEAT={history:true,favorites:true,quickLaunch:true,cloak:true}
+function cfgSiteName(){return (window.__cfg&&window.__cfg.siteName)||'Candify'}
+function applyFeatures(){
+$('#cloak').style.display=FEAT.cloak?'':'none'
+$('#star').style.display=FEAT.favorites?'':'none'
+}
+async function loadRemoteConfig(){
+if(STATIC||NOAPI)return   // no /api backend in these modes
+try{const r=await fetch(API+'/api/config',{cache:'no-store'});if(!r.ok)return;const c=await r.json();window.__cfg=c
+if(c.features)FEAT=Object.assign(FEAT,c.features)
+applyFeatures()
+// seed theme for first-time visitors who haven't chosen one
+if(!store.get('settings',null)&&c.theme&&themes[c.theme]){S.theme=c.theme;applyTheme()}
+if(c.maintenance&&!localStorage.getItem('cdf.ownertoken')){showMaintenance(c);return}
+if(c.announcement){$('#announce-t').textContent=c.announcement;$('#announce').classList.add('on');paintIcons($('#announce'))}
+if(document.title&&S.cloak==='none')document.title=cfgSiteName()
+if(cur&&!cur.frame)renderStart()
+}catch(e){}}
+
+/* ========================= boot (auto-start, no launch button) ========================= */
+paintIcons(document)
+applyTheme()
+newTab()                 // lands straight on the blank new-tab page, URL bar ready
+initEngine()             // register SW + transport + ping backend in the background
+loadRemoteConfig()
+if(!STATIC&&!NOAPI)setInterval(pingBackend,20000)   // keep latency fresh + detect offline/maintenance
+window.CANDIFY_VERSION='2.0.0'
 </script>
 </body>
 </html>

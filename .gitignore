@@ -1,1 +1,7 @@
 node_modules
+vault.json
+admin-config.json
+admin-log.json
+dist
+.firebase
+worker-wisp-server

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex">
+<title>Candify · Owner</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="/config.js"></script>
+<style>
+:root{--bg:#17091f;--bg2:#1f0e2e;--panel:#2a1340;--panel2:#361a52;--line:#ffffff1a;--line2:#ffffff2e;--fg:#f6edff;--mut:#f6edffa8;--mut2:#f6edff66;--acc:#ff4fa3;--acc-ink:#1a0712;--acc2:#5ff2c4;--acc3:#ffe45c;--info:#6c8cff;--ok:#36d399;--warn:#ffb020;--err:#ff5c7a;--radius:16px;--speed:.16s;--shadow:0 10px 40px #0007}
+:root[data-mode=light]{--bg:#f4eef9;--bg2:#ece3f5;--panel:#fff;--panel2:#f3ecfa;--line:#2a123314;--line2:#2a123326;--fg:#24103a;--mut:#24103a9e;--mut2:#24103a5c;--acc-ink:#fff}
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:400 14px/1.45 Inter,system-ui,sans-serif}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+.brand{font-family:Fredoka,sans-serif;font-weight:700}
+svg.ic{width:1.1em;height:1.1em;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex:none}
+.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+/* login */
+#login{min-height:100%;display:grid;place-items:center;padding:24px}
+.card{width:min(400px,100%);background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow)}
+.card .lock{width:58px;height:58px;border-radius:17px;background:var(--bg2);display:grid;place-items:center;margin:0 auto 16px;color:var(--acc)}
+.card .lock svg{width:28px;height:28px}
+.card h1{text-align:center;font-size:23px}
+.card p{text-align:center;color:var(--mut);font-size:13.5px;margin-top:6px}
+.card form{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+.card input{height:46px;border-radius:12px;border:1.5px solid var(--line2);background:var(--bg2);padding:0 14px;outline:0;transition:border-color var(--speed)}
+.card input:focus{border-color:var(--acc)}
+.card button[type=submit]{height:46px;border-radius:12px;background:var(--acc);color:var(--acc-ink);font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter var(--speed),transform var(--speed)}
+.card button[type=submit]:hover{filter:brightness(1.06)}.card button[type=submit]:active{transform:scale(.98)}
+.card button:disabled{opacity:.6;cursor:default}
+.msg{min-height:18px;text-align:center;font-size:13px;color:var(--err)}
+.backlink{display:block;text-align:center;margin-top:16px;color:var(--mut2);font-size:12.5px;text-decoration:none}
+.backlink:hover{color:var(--fg)}
+
+/* dashboard */
+#dash{display:none;min-height:100%;flex-direction:column}
+#top{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+#top .logo{font-size:20px;color:var(--acc3)}
+#top .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--bg2);color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+#top .sp{flex:1}
+#top .st{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mut);padding:6px 12px;border-radius:999px;background:var(--bg2)}
+#top .st .d{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+#top .st.down .d{background:var(--err)}
+.iconbtn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--mut)}
+.iconbtn:hover{background:var(--bg2);color:var(--fg)}
+#wrap{display:flex;flex:1;min-height:0}
+#nav{width:210px;flex:none;padding:16px 12px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:3px;background:var(--bg2)}
+#nav button{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:12px;color:var(--mut);font-weight:500;font-size:14px;text-align:left;transition:background var(--speed),color var(--speed)}
+#nav button:hover{background:var(--panel);color:var(--fg)}
+#nav button.on{background:var(--acc);color:var(--acc-ink);font-weight:700}
+#nav .sp{flex:1}
+#view{flex:1;min-width:0;overflow:auto;padding:24px}
+.vh{font-size:22px;font-weight:700;margin-bottom:4px}
+.vs{color:var(--mut);font-size:13.5px;margin-bottom:22px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.stat .l{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12.5px;font-weight:600}
+.stat .l svg{color:var(--acc)}
+.stat .v{font-size:28px;font-weight:700;margin-top:10px;font-variant-numeric:tabular-nums}
+.stat .sub{color:var(--mut2);font-size:12px;margin-top:3px}
+.block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+.block h3{display:flex;align-items:center;gap:8px;font-size:15px;margin-bottom:14px}
+.block h3 svg{color:var(--acc)}
+.chart{display:flex;align-items:flex-end;gap:3px;height:140px;padding-top:10px}
+.chart .bar{flex:1;min-width:2px;background:linear-gradient(180deg,var(--acc),color-mix(in srgb,var(--acc) 50%,transparent));border-radius:3px 3px 0 0;transition:height var(--speed);position:relative}
+.chart .bar:hover{background:var(--acc2)}
+.chart .bar span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--mut);opacity:0;white-space:nowrap}
+.chart .bar:hover span{opacity:1}
+.chartx{display:flex;justify-content:space-between;color:var(--mut2);font-size:11px;margin-top:6px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:9px 14px;font-size:13.5px}
+.kv .k{color:var(--mut)}.kv .v{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fld label{font-size:12.5px;color:var(--mut);font-weight:600}
+.fld input,.fld select,.fld textarea{border-radius:11px;border:1.5px solid var(--line2);background:var(--bg2);padding:10px 12px;outline:0;transition:border-color var(--speed)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--acc)}
+.fld textarea{resize:vertical;min-height:60px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);margin-bottom:10px}
+.toggle .tx{font-size:14px}.toggle .tx small{display:block;color:var(--mut2);font-size:12px;margin-top:2px}
+.swt{width:46px;height:27px;border-radius:999px;background:var(--line2);position:relative;flex:none;transition:background var(--speed)}
+.swt::after{content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform var(--speed)}
+.swt.on{background:var(--ok)}.swt.on::after{transform:translateX(19px)}
+.btn{padding:11px 18px;border-radius:12px;background:var(--acc);color:var(--acc-ink);font-weight:700;display:inline-flex;align-items:center;gap:8px;transition:filter var(--speed),transform var(--speed)}
+.btn:hover{filter:brightness(1.06)}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.5;cursor:default}
+.btn.alt{background:var(--bg2);color:var(--fg);border:1px solid var(--line2)}
+.logrow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;border:1px solid var(--line);margin-bottom:6px;background:var(--bg2)}
+.logrow .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--panel2);color:var(--mut);flex:none}
+.logrow .tag.ok{color:var(--ok)}.logrow .tag.fail{color:var(--err)}.logrow .tag.cfg{color:var(--info)}
+.logrow .d{color:var(--mut2);font-size:12px;margin-left:auto;flex:none}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+.badge.on{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok)}
+.badge.off{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn)}
+#saved{position:fixed;bottom:22px;left:50%;transform:translate(-50%,16px);background:var(--panel);border:1px solid var(--line2);padding:10px 18px;border-radius:12px;font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:8px;opacity:0;pointer-events:none;transition:all var(--speed);box-shadow:var(--shadow);z-index:30}
+#saved.on{opacity:1;transform:translate(-50%,0)}#saved svg{color:var(--ok)}
+#navtoggle{display:none}
+@media(max-width:760px){
+#nav{position:fixed;top:0;bottom:0;left:0;z-index:20;transform:translateX(-102%);transition:transform var(--speed);box-shadow:var(--shadow)}
+#nav.on{transform:none}#navtoggle{display:grid}
+#view{padding:18px}
+}
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="login">
+<div>
+<div class="card">
+<div class="lock" id="lockic"></div>
+<h1 class="brand">Owner access</h1>
+<p>Sign in to manage this Candify proxy.</p>
+<form id="lform">
+<input id="pw" type="password" placeholder="Owner password" autocomplete="current-password" autofocus>
+<button type="submit" id="lbtn"><span id="lbtnt">Sign in</span></button>
+<div class="msg" id="lmsg"></div>
+</form>
+</div>
+<a class="backlink" href="/">← Back to Candify</a>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash">
+<div id="top">
+<button class="iconbtn" id="navtoggle" aria-label="Menu"></button>
+<span class="brand logo" id="topname">Candify</span>
+<span class="pill">Owner</span>
+<span class="sp"></span>
+<span class="st" id="topst"><span class="d"></span><span id="topstt">Online</span></span>
+<button class="iconbtn" id="themebtn" title="Toggle theme"></button>
+<button class="iconbtn" id="logoutbtn" title="Log out"></button>
+</div>
+<div id="wrap">
+<nav id="nav"></nav>
+<div id="view"></div>
+</div>
+</div>
+<div id="saved"></div>
+
+<script>
+const ICONS={
+lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+layout:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+activity:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+server:'<rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><line x1="6" y1="7" x2="6.01" y2="7"/><line x1="6" y1="17" x2="6.01" y2="17"/>',
+settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+menu:'<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>',
+sun:'<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/>',
+moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',
+check:'<polyline points="20 6 9 17 4 12"/>',
+gauge:'<path d="M12 14l3.5-3.5"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/>',
+zap:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+clock:'<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>',
+cpu:'<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
+construction:'<rect x="2" y="6" width="20" height="8" rx="1"/><path d="M17 14v7M7 14v7M17 3v3M7 3v3M2 10h20"/>',
+tag:'<path d="M20.6 13.4 12 22l-9-9V3h10z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+check2:'<polyline points="20 6 9 17 4 12"/>',
+refresh:'<path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>'}
+function ic(n,cls){return '<svg class="ic '+(cls||'')+'" viewBox="0 0 24 24">'+(ICONS[n]||'')+'</svg>'}
+const $=s=>document.querySelector(s)
+const API=(()=>{const w=window.CANDIFY_WISP;if(!w)return location.origin;try{return new URL(w).origin.replace(/^ws/,'http')}catch(e){return location.origin}})()
+let token=sessionStorage.getItem('cdf.owner')||localStorage.getItem('cdf.ownertoken')||''
+let MODE=localStorage.getItem('cdf.adminmode')||'dark'
+function applyMode(){document.documentElement.dataset.mode=MODE;$('#themebtn').innerHTML=ic(MODE==='light'?'moon':'sun')}
+
+$('#lockic').innerHTML=ic('lock')
+async function api(path,opts){
+opts=opts||{};opts.headers=Object.assign({'content-type':'application/json'},opts.headers||{})
+if(token)opts.headers.authorization='Bearer '+token
+const r=await fetch(API+path,opts)
+let d={};try{d=await r.json()}catch(e){}
+return {ok:r.ok,status:r.status,data:d}
+}
+
+/* ---- login ---- */
+$('#lform').onsubmit=async e=>{
+e.preventDefault()
+const btn=$('#lbtn'),msg=$('#lmsg')
+msg.textContent='';btn.disabled=true;$('#lbtnt').textContent='Signing in…'
+const r=await api('/api/admin/login',{method:'POST',body:JSON.stringify({password:$('#pw').value})})
+btn.disabled=false;$('#lbtnt').textContent='Sign in'
+if(r.ok&&r.data.token){token=r.data.token;sessionStorage.setItem('cdf.owner',token);try{localStorage.setItem('cdf.ownertoken',token)}catch(e){};enterDash()}
+else{msg.textContent=r.data.error||'Sign in failed';$('#pw').select()}
+}
+$('#logoutbtn').onclick=async()=>{await api('/api/admin/logout',{method:'POST'});token='';sessionStorage.removeItem('cdf.owner');try{localStorage.removeItem('cdf.ownertoken')}catch(e){};location.reload()}
+$('#themebtn').onclick=()=>{MODE=MODE==='light'?'dark':'light';localStorage.setItem('cdf.adminmode',MODE);applyMode()}
+$('#navtoggle').onclick=()=>$('#nav').classList.toggle('on')
+
+/* ---- dashboard ---- */
+let tab='overview',data=null,poll
+const TABS=[['overview','layout','Overview'],['traffic','activity','Traffic'],['system','server','System'],['config','settings','Configuration'],['activity','list','Activity']]
+async function enterDash(){
+$('#login').style.display='none';$('#dash').style.display='flex'
+buildNav();applyMode();$('#logoutbtn').innerHTML=ic('logout');$('#navtoggle').innerHTML=ic('menu')
+await refresh();clearInterval(poll);poll=setInterval(()=>refresh(true),8000)
+}
+function buildNav(){const n=$('#nav');n.innerHTML=''
+TABS.forEach(t=>{const b=document.createElement('button');b.className=t[0]===tab?'on':'';b.innerHTML=ic(t[1])+'<span>'+t[2]+'</span>';b.onclick=()=>{tab=t[0];$('#nav').classList.remove('on');buildNav();renderView()};n.appendChild(b)})}
+async function refresh(silent){
+const r=await api('/api/admin/overview')
+if(r.status===401){if(!silent){token='';sessionStorage.removeItem('cdf.owner');location.reload()}return}
+if(r.ok){data=r.data;$('#topst').classList.remove('down');$('#topstt').textContent='Online';$('#topname').textContent=(data.config&&data.config.siteName)||'Candify';renderView()}
+else{$('#topst').classList.add('down');$('#topstt').textContent='Backend down'}
+}
+function fmtUp(s){const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return(d?d+'d ':'')+(h?h+'h ':'')+m+'m'}
+function ago(t){const s=Math.floor((Date.now()-t)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
+
+function renderView(){
+const v=$('#view');if(!data){v.innerHTML='<div class="vs">Loading…</div>';return}
+const s=data.status,c=data.config
+if(tab==='overview'){
+v.innerHTML='<div class="vh">Overview</div><div class="vs">Live snapshot of your proxy. All figures measured by the backend.</div>'
++'<div class="cards">'
++stat('gauge','Proxy',c.maintenance?'<span class="badge off">'+ic('construction')+'Maintenance</span>':'<span class="badge on">'+ic('check')+'Online</span>','')
++stat('users','Active sessions',s.sessions,'live proxy connections')
++stat('zap','Requests served',s.requests.toLocaleString(),s.connectionsTotal+' total connections')
++stat('alert','Errors',s.errors,'since start')
++stat('clock','Uptime',fmtUp(s.uptime),'since last restart')
++stat('server','Version','v'+s.version,s.node+' · '+s.platform)
++'</div>'
++block('activity','Traffic (requests / minute)',chartHTML())
++block('list','Recent owner activity',logHTML(data.log,6))
+}
+if(tab==='traffic'){
+const tot=data.traffic.reduce((a,b)=>a+b.c,0)
+v.innerHTML='<div class="vh">Traffic</div><div class="vs">Requests handled by the backend, bucketed per minute (last hour). Destination URLs are not logged, by design.</div>'
++'<div class="cards">'+stat('zap','Requests served',s.requests.toLocaleString(),'')+stat('activity','Last hour',tot.toLocaleString(),'')+stat('users','Live sessions',s.sessions,'')+stat('alert','Errors',s.errors,'')+'</div>'
++block('activity','Requests / minute (last '+data.traffic.length+' min)',chartHTML())
+}
+if(tab==='system'){
+v.innerHTML='<div class="vh">System</div><div class="vs">Backend health and build information.</div>'
++block('server','Backend','<div class="kv">'
++kv('Status','<span class="badge on">'+ic('check')+'Running</span>')+kv('Version','v'+s.version)+kv('Build',new Date(s.build).toLocaleString())
++kv('Uptime',fmtUp(s.uptime))+kv('Node',s.node)+kv('Platform',s.platform)+kv('Active owner tokens',s.activeTokens)+'</div>')
++block('gauge','Services','<div class="kv">'
++kv('HTTP + static','<span class="badge on">'+ic('check')+'OK</span>')
++kv('Proxy (Wisp)','<span class="badge on">'+ic('check')+'OK</span>')
++kv('Admin API','<span class="badge on">'+ic('check')+'OK</span>')
++kv('Maintenance mode',c.maintenance?'<span class="badge off">On</span>':'<span class="badge on">Off</span>')+'</div>')
+}
+if(tab==='config')renderConfig(v,c)
+if(tab==='activity'){
+v.innerHTML='<div class="vh">Activity log</div><div class="vs">Owner actions on this server. Passwords and tokens are never logged.</div>'+block('list','Events',logHTML(data.log,100))
+}
+document.querySelectorAll('[data-ic]').forEach(e=>e.outerHTML=ic(e.getAttribute('data-ic')))
+}
+function stat(icn,label,val,sub){return '<div class="stat"><div class="l">'+ic(icn)+'<span>'+label+'</span></div><div class="v">'+val+'</div>'+(sub?'<div class="sub">'+sub+'</div>':'')+'</div>'}
+function block(icn,title,inner){return '<div class="block"><h3>'+ic(icn)+title+'</h3>'+inner+'</div>'}
+function kv(k,v){return '<div class="k">'+k+'</div><div class="v">'+v+'</div>'}
+function chartHTML(){const t=data.traffic;if(!t.length)return '<div class="vs">No traffic recorded yet.</div>'
+const max=Math.max(1,...t.map(x=>x.c))
+let bars=t.map(x=>'<div class="bar" style="height:'+Math.max(2,x.c/max*100)+'%"><span>'+x.c+'/min</span></div>').join('')
+return '<div class="chart">'+bars+'</div><div class="chartx"><span>'+t.length+' min ago</span><span>peak '+max+'/min</span><span>now</span></div>'}
+function logHTML(log,n){if(!log||!log.length)return '<div class="vs">No activity yet.</div>'
+const name={'login.ok':['ok','Owner signed in'],'login.fail':['fail','Failed sign-in'],'logout':['','Owner signed out'],'config.update':['cfg','Config updated']}
+return log.slice(0,n).map(e=>{const m=name[e.action]||['',e.action];return '<div class="logrow"><span class="tag '+m[0]+'">'+m[0].toUpperCase()+'</span><span>'+m[1]+(e.fields?' ('+e.fields.join(', ')+')':'')+'</span><span class="d">'+ago(e.t)+'</span></div>'}).join('')}
+
+function renderConfig(v,c){
+v.innerHTML='<div class="vh">Configuration</div><div class="vs">Changes save to the backend and apply to everyone. No source editing needed.</div><div id="cfgform"></div>'
+const f=$('#cfgform')
+f.innerHTML=''
+f.appendChild(fld('Site name','text',c.siteName,'siteName'))
+f.appendChild(fld('Announcement banner (blank to hide)','textarea',c.announcement,'announcement'))
+// maintenance block
+const mb=document.createElement('div');mb.className='block'
+mb.innerHTML='<h3>'+ic('construction')+'Maintenance mode</h3>'
+const tg=document.createElement('div');tg.className='toggle'
+tg.innerHTML='<div class="tx">Maintenance mode<small>Shows a maintenance page and pauses the proxy for everyone except you.</small></div><div class="swt'+(c.maintenance?' on':'')+'" id="mtog"></div>'
+mb.appendChild(tg)
+const mf=fld('Maintenance message','textarea',c.maintenanceMsg,'maintenanceMsg');mb.appendChild(mf)
+f.appendChild(mb)
+tg.querySelector('#mtog').onclick=()=>tg.querySelector('#mtog').classList.toggle('on')
+// features
+const fb=document.createElement('div');fb.className='block';fb.innerHTML='<h3>'+ic('settings')+'Feature toggles</h3>'
+const feats=[['history','History'],['favorites','Favorites'],['quickLaunch','Quick launch'],['cloak','about:blank cloak']]
+feats.forEach(ft=>{const t=document.createElement('div');t.className='toggle'
+t.innerHTML='<div class="tx">'+ft[1]+'</div><div class="swt'+((c.features&&c.features[ft[0]])?' on':'')+'" data-feat="'+ft[0]+'"></div>'
+t.querySelector('.swt').onclick=e=>e.currentTarget.classList.toggle('on');fb.appendChild(t)})
+f.appendChild(fb)
+const save=document.createElement('button');save.className='btn';save.innerHTML=ic('check')+'<span>Save changes</span>'
+save.onclick=async()=>{
+save.disabled=true
+const body={siteName:f.querySelector('[data-k=siteName]').value,announcement:f.querySelector('[data-k=announcement]').value,
+maintenanceMsg:f.querySelector('[data-k=maintenanceMsg]').value,maintenance:$('#mtog').classList.contains('on'),
+features:{}}
+fb.querySelectorAll('[data-feat]').forEach(s=>body.features[s.getAttribute('data-feat')]=s.classList.contains('on'))
+const r=await api('/api/admin/config',{method:'POST',body:JSON.stringify(body)})
+save.disabled=false
+if(r.ok){showSaved();data.config=r.data.config;$('#topname').textContent=r.data.config.siteName}
+else alert(r.data.error||'Save failed')
+}
+f.appendChild(save)
+document.querySelectorAll('#view [data-ic]').forEach(e=>e.outerHTML=ic(e.getAttribute('data-ic')))
+}
+function fld(label,type,val,key){const d=document.createElement('div');d.className='fld'
+const inp=type==='textarea'?'<textarea data-k="'+key+'"></textarea>':'<input type="text" data-k="'+key+'">'
+d.innerHTML='<label>'+label+'</label>'+inp
+d.querySelector('[data-k]').value=val||''
+return d}
+function showSaved(){const s=$('#saved');s.innerHTML=ic('check')+'<span>Saved</span>';s.classList.add('on');setTimeout(()=>s.classList.remove('on'),1800)}
+
+/* ---- boot ---- */
+applyMode()
+;(async()=>{
+if(token){const r=await api('/api/admin/session');if(r.ok&&r.data.ok){enterDash();return}token='';sessionStorage.removeItem('cdf.owner')}
+// check whether owner login is even configured
+try{const st=await (await fetch(API+'/api/status',{cache:'no-store'})).json()
+if(!st.ownerLogin){$('#lmsg').innerHTML='Owner login isn\'t set up on this server yet.<br>Set the <b>OWNER_PASSWORD</b> environment variable and restart.';$('#pw').disabled=true;$('#lbtn').disabled=true}}catch(e){$('#lmsg').textContent='Can\'t reach the backend.'}
+$('#pw').focus()
+})()
+</script>
+</body>
+</html>
