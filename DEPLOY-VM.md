@@ -3,12 +3,21 @@
 This makes the proxy fast and stable: no home upload speed, no quick tunnel, no PC that has to stay on.
 
 ## 1. Create the VM
-1. Sign up at https://www.oracle.com/cloud/free/ (a card is needed for identity checks; Always Free resources stay free).
+1. Sign up at https://www.oracle.com/cloud/free/ (a card is needed for identity checks; Always Free resources stay free, the card is not charged).
 2. Compute > Instances > Create instance.
-   - Image: Ubuntu 22.04 or 24.04
-   - Shape: Ampere A1 (ARM, 1-2 OCPU, 6-12 GB) or the AMD micro shape; both are in the Always Free list.
-   - Add your SSH public key (or let Oracle generate one and download it).
-3. In the VM's subnet Security List, add ingress rules for TCP **80** and **443** from `0.0.0.0/0`.
+   - Image: **Ubuntu** 22.04 or 24.04
+   - Shape: the **AMD** "VM.Standard.E2.1.Micro" (Always Free, almost always available). The Ampere A1 (ARM) shape is beefier but often shows "out of capacity" — if so, use the AMD micro, or try a different Availability Domain / region.
+   - **Download the private key** when it offers one (you'll need it to log in). Keep it safe.
+3. On the instance's subnet, open **Security List > Add Ingress Rules**: source `0.0.0.0/0`, TCP, destination ports **80** and **443** (one rule each).
+4. Copy the instance's **Public IP address** from its details page.
+
+### Logging in from Windows (PowerShell)
+Windows 11 has `ssh` built in. With the key you downloaded (e.g. `ssh-key.key` in Downloads):
+```powershell
+icacls "$env:USERPROFILE\Downloads\ssh-key.key" /inheritance:r /grant:r "$($env:USERNAME):(R)"
+ssh -i "$env:USERPROFILE\Downloads\ssh-key.key" ubuntu@YOUR_VM_IP
+```
+(The `icacls` line fixes a "permissions too open" error Windows otherwise throws.)
 
 ## 2. Install Node and the app
 ```bash
@@ -40,6 +49,12 @@ sudo apt update && sudo apt install -y caddy
 echo 'candify.duckdns.org { reverse_proxy localhost:3001 }' | sudo tee /etc/caddy/Caddyfile
 sudo systemctl restart caddy
 ```
+Make the firewall rules survive a reboot:
+```bash
+sudo apt install -y iptables-persistent   # choose "Yes" to save current rules
+sudo netfilter-persistent save
+```
+Check it's live: open `https://candify.duckdns.org/api/status` in a browser — it should return JSON. Caddy proxies WebSockets automatically, so `/wisp/` works over `wss://` too.
 
 ## 4. Point the static site at it
 On your PC, in the project folder:
